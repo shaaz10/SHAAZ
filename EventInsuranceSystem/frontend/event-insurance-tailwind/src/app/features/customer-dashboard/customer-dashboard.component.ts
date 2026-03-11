@@ -470,7 +470,7 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
     this.claimForm.claimAmount = 0;
     this.claimForm.description = '';
     this.claimMsg.set('');
-    this.tab.set('new-claim');
+    this.tab.set('raise-claim');
   }
 
   makePayment() {

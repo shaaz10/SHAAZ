@@ -90,12 +90,12 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
 
   loadAllData() {
     this.adminSvc.getAgents().subscribe({
-      next: (agents) => { this.availableAgents = agents; this.cdr.detectChanges(); },
+      next: (agents) => { this.availableAgents = agents.sort((a: any, b: any) => b.id - a.id); this.cdr.detectChanges(); },
       error: () => { console.warn('Failed to load real agents'); }
     });
 
     this.adminSvc.getClaimsOfficers().subscribe({
-      next: (officers) => { this.availableOfficers = officers; this.cdr.detectChanges(); },
+      next: (officers) => { this.availableOfficers = officers.sort((a: any, b: any) => b.id - a.id); this.cdr.detectChanges(); },
       error: () => { console.warn('Failed to load claims officers'); }
     });
 
@@ -164,16 +164,19 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
   }
 
   approveApplication(app: any) {
-    this.adminSvc.approveApplication(app.id, { approvalNotes: app.notes || 'Approved.', suggestedPremium: app.premiumAmount }).subscribe({
-      next: () => {
-        app.status = 'Approved';
+    this.adminSvc.approveAndActivate(app.id, { 
+      approvalNotes: app.notes || 'Approved.', 
+      suggestedPremium: app.premiumAmount 
+    }).subscribe({
+      next: (res) => {
+        alert('Application Approved and Policy Generated successfully!');
         this.approvals = this.approvals.filter(a => a.id !== app.id);
-        alert('Application Approved successfully!');
+        this.loadPolicies();
         this.loadPendingPolicies();
         this.cdr.detectChanges();
       },
       error: (e) => {
-        alert('Approval failed: ' + (e.error?.message || 'Error'));
+        alert('Approval failed: ' + (e.error?.message || 'Error occurred during activation.'));
         this.cdr.detectChanges();
       }
     });
@@ -372,10 +375,10 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
    */
   assignOfficer(c: any) {
     // Only proceed if an officer was actually selected in the UI
-    if (!c.selectedOfficer) return;
+    if (!c.selectedOfficerId) return;
 
     // Call the admin service to update the claim's officer assignment
-    this.adminSvc.assignClaimsOfficer(c.id, c.selectedOfficer).subscribe({
+    this.adminSvc.assignClaimsOfficer(c.id, c.selectedOfficerId).subscribe({
       next: () => {
         // Notify the admin of success and refresh the data to update the UI
         alert('Claims Officer assigned successfully!');

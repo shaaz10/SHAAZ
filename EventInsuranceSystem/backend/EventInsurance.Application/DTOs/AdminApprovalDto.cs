@@ -10,6 +10,7 @@ namespace EventInsurance.Application.DTOs
     {
         public bool IsApproved { get; set; }
         public string ApprovalNotes { get; set; } = string.Empty;
+        public decimal? SuggestedPremium { get; set; }
     }
 
     public class AdminApprovalResponseDto

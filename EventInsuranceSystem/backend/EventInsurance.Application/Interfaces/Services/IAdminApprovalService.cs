@@ -14,6 +14,10 @@ namespace EventInsurance.Application.Interfaces.Services
             int applicationId,
             AdminApprovalRequestDto dto);
 
+        Task<ActivePolicyResponseDto> ApproveAndActivateAsync(
+            int applicationId,
+            AdminApprovalRequestDto dto);
+
         Task<AdminApprovalResponseDto> RejectApplicationAsync(
             int applicationId,
             string rejectionReason);

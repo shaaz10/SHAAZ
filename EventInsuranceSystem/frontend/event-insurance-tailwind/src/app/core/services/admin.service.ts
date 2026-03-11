@@ -43,6 +43,14 @@ export class AdminService {
         });
     }
 
+    approveAndActivate(applicationId: number, dto: { approvalNotes: string, suggestedPremium?: number }) {
+        return this.http.post<any>(`${this.api}/adminapproval/approve-and-activate/${applicationId}`, {
+            isApproved: true,
+            approvalNotes: dto.approvalNotes,
+            suggestedPremium: dto.suggestedPremium
+        });
+    }
+
     rejectApplication(applicationId: number, rejectionReason: string) {
         return this.http.post<any>(`${this.api}/adminapproval/reject/${applicationId}`, { rejectionReason });
     }

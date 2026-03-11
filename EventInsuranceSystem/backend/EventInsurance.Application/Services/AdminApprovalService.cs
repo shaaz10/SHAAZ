@@ -15,13 +15,27 @@ namespace EventInsurance.Application.Services
     {
         private readonly IPolicyApplicationRepository _applicationRepository;
         private readonly INotificationService _notificationService;
+        private readonly IActivePolicyService _activePolicyService;
 
         public AdminApprovalService(
             IPolicyApplicationRepository applicationRepository,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IActivePolicyService activePolicyService)
         {
             _applicationRepository = applicationRepository;
             _notificationService = notificationService;
+            _activePolicyService = activePolicyService;
+        }
+
+        public async Task<ActivePolicyResponseDto> ApproveAndActivateAsync(
+            int applicationId,
+            AdminApprovalRequestDto dto)
+        {
+            // First approve
+            await ApproveApplicationAsync(applicationId, dto);
+
+            // Then activate
+            return await _activePolicyService.CreateActivePolicyAsync(applicationId);
         }
 
         public async Task<AdminApprovalResponseDto> ApproveApplicationAsync(
@@ -41,6 +55,10 @@ namespace EventInsurance.Application.Services
 
             // Update application
             application.Status = PolicyApplicationStatus.Approved;
+            if (dto.SuggestedPremium.HasValue && dto.SuggestedPremium.Value > 0)
+            {
+                application.PremiumAmount = dto.SuggestedPremium.Value;
+            }
             application.UpdatedAt = DateTime.UtcNow;
 
             await _applicationRepository.SaveChangesAsync();

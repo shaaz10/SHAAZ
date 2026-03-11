@@ -56,6 +56,26 @@ namespace EventInsurance.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpPost("approve-and-activate/{applicationId}")]
+        public async Task<IActionResult> ApproveAndActivate(
+            int applicationId,
+            [FromBody] AdminApprovalRequestDto dto)
+        {
+            try
+            {
+                var result = await _service.ApproveAndActivateAsync(
+                    applicationId,
+                    dto);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost("reject/{applicationId}")]
         public async Task<IActionResult> RejectApplication(
             int applicationId,
