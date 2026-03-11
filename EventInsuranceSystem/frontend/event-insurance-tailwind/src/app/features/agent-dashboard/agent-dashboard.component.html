@@ -327,14 +327,15 @@
             </button>
             }
 
-            <div class="flex justify-between items-center ml-1">
-              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">ADJUDICATION NOTES</label>
-              <button (click)="enhanceAppNotes(app)" [disabled]="enhancingNotes() || !app._notes"
-                class="text-[0.6rem] font-black uppercase tracking-widest text-[#004b87] hover:text-[#e2231a] transition-colors flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                <i class="fa-solid" [class]="enhancingNotes() ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'"></i>
-                {{ enhancingNotes() ? 'ENHANCING...' : 'AI ENHANCE' }}
-              </button>
-            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center ml-1">
+                <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">ADJUDICATION NOTES</label>
+                <button (click)="enhanceAppNotes(app)" [disabled]="enhancingNotes() || !app._notes"
+                  class="text-[0.6rem] font-black uppercase tracking-widest text-[#004b87] hover:text-[#e2231a] transition-colors flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                  <i class="fa-solid" [class]="enhancingNotes() ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'"></i>
+                  {{ enhancingNotes() ? 'ENHANCING...' : 'AI ENHANCE' }}
+                </button>
+              </div>
               <textarea [(ngModel)]="app._notes"
                 class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
                 rows="3" placeholder="Enter formal findings..."></textarea>
