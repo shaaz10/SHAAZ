@@ -317,6 +317,49 @@
             </div>
           </div>
 
+          <!-- ============================== -->
+          <!-- AGENT PREMIUM CALCULATOR CARD  -->
+          <!-- ============================== -->
+          <ng-container *ngIf="calcPremium(app) as calc">
+          <div class="rounded-2xl overflow-hidden border border-slate-100 mb-5">
+            <div class="bg-gradient-to-r from-[#001a35] to-[#004b87] px-5 py-4 flex items-center justify-between">
+              <div>
+                <p class="text-[0.5rem] font-black uppercase tracking-[3px] text-white/50 mb-0.5">SYSTEM PREMIUM ESTIMATE</p>
+                <p class="text-2xl font-black text-white leading-none">₹{{ calc.finalPremium | number }}</p>
+              </div>
+              <div class="flex flex-col items-end gap-2">
+                <span class="text-[0.5rem] font-black uppercase tracking-widest px-2 py-1 rounded-full"
+                  [class]="calc.riskScore >= 70 ? 'bg-red-400/20 text-red-200' : calc.riskScore >= 40 ? 'bg-amber-400/20 text-amber-200' : 'bg-emerald-400/20 text-emerald-200'">
+                  {{ calc.riskLabel }}
+                </span>
+                <button type="button"
+                  (click)="app._suggestedPremium = calc.finalPremium"
+                  class="text-[0.55rem] font-black uppercase tracking-widest bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg border-none cursor-pointer transition-all">
+                  <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Use This
+                </button>
+              </div>
+            </div>
+            <div class="divide-y divide-slate-50 bg-white text-sm">
+              <div class="flex justify-between items-center px-5 py-2.5">
+                <span class="text-[0.7rem] font-bold text-slate-500">Base Premium (4% of ₹{{ calc.baseCoverage | number }})</span>
+                <span class="text-[0.8rem] font-black text-[#001a35]">₹{{ calc.basePremium | number }}</span>
+              </div>
+              <div class="flex justify-between items-center px-5 py-2.5">
+                <span class="text-[0.7rem] font-bold text-slate-500">Risk Score {{ calc.riskScore }}/100 (+{{ calc.riskPct }}%)</span>
+                <span class="text-[0.8rem] font-black" [class]="calc.riskColor">+₹{{ calc.riskAddon | number }}</span>
+              </div>
+              <div class="flex justify-between items-center px-5 py-2.5">
+                <span class="text-[0.7rem] font-bold text-slate-500">{{ calc.eventType || 'Event' }} Type (+{{ calc.eventPct }}%)</span>
+                <span class="text-[0.8rem] font-black text-indigo-600">+₹{{ calc.eventAddon | number }}</span>
+              </div>
+              <div class="flex justify-between items-center px-5 py-2.5">
+                <span class="text-[0.7rem] font-bold text-slate-500">{{ calc.attendees | number }} Attendees (+{{ calc.crowdPct }}%)</span>
+                <span class="text-[0.8rem] font-black text-orange-500">+₹{{ calc.crowdAddon | number }}</span>
+              </div>
+            </div>
+          </div>
+          </ng-container>
+
           @if (app.status === 'PendingValidation' || app.status === 'UnderReview' || app.status === 'Validated') {
           <div class="space-y-6">
             @if (app.status === 'PendingValidation') {

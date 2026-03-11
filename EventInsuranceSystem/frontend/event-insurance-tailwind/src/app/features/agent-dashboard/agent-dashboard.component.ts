@@ -358,4 +358,42 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked {
       error: () => this.enhancingNotes.set(false)
     });
   }
+
+  /** Premium calculator — same formula used on Customer Dashboard */
+  calcPremium(app: any) {
+    const req        = app.insuranceRequest || app;
+    const riskScore  = app.riskScore   || 50;
+    const eventBudget = req.eventBudget || 100000;
+    const coverageReq = (req.coverageRequested > 0 ? req.coverageRequested : eventBudget * 1.5);
+    const attendees  = req.estimatedAttendees || 200;
+    const eventType  = req.eventType || '';
+
+    const baseCoverage = Math.round(coverageReq);
+    const basePremium  = baseCoverage * 0.04;
+
+    const riskPct    = Math.round((riskScore / 100) * 80);
+    const riskAddon  = Math.round(basePremium * riskPct / 100);
+
+    const eventMap: Record<string, number> = {
+      'Wedding': 10, 'Concert': 30, 'Festival': 40,
+      'Sports Event': 50, 'Conference': 0, 'Corporate Event': 10
+    };
+    const eventPct   = eventMap[eventType] ?? 15;
+    const eventAddon = Math.round(basePremium * eventPct / 100);
+
+    const crowdPct   = attendees > 1000 ? 30 : attendees > 500 ? 15 : 0;
+    const crowdAddon = Math.round(basePremium * crowdPct / 100);
+
+    const finalPremium = Math.round(basePremium) + riskAddon + eventAddon + crowdAddon;
+
+    return {
+      baseCoverage, basePremium: Math.round(basePremium),
+      riskScore, riskPct, riskAddon,
+      eventType, eventPct, eventAddon,
+      attendees, crowdPct, crowdAddon,
+      finalPremium,
+      riskLabel: riskScore >= 70 ? 'HIGH RISK' : riskScore >= 40 ? 'MEDIUM RISK' : 'LOW RISK',
+      riskColor: riskScore >= 70 ? 'text-red-500' : riskScore >= 40 ? 'text-amber-500' : 'text-emerald-500',
+    };
+  }
 }
