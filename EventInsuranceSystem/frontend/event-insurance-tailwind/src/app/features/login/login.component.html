@@ -4,21 +4,20 @@
 
     <!-- Sidebar / Brand Side -->
     <div class="md:w-5/12 bg-[#001a35] text-white p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
-      <!-- Decorative Element -->
+      <!-- Decorative -->
       <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#e2231a] opacity-10 rounded-full blur-3xl"></div>
       <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-[#004b87] opacity-20 rounded-full blur-3xl"></div>
 
       <div class="relative z-10">
-        <img src="logo.svg" class="h-8 mb-6 md:mb-4 md:mb-6 brightness-0 invert" alt="Logo">
+        <img src="logo.svg" class="h-8 mb-6 brightness-0 invert" alt="Logo">
         <h2 class="text-[2.2rem] font-black leading-tight mb-6 font-heading">Secure <br><span
             class="text-[#fac9c8]">Operations.</span></h2>
-        <p class="text-white/60 text-[1rem] leading-relaxed mb-5 md:mb-6 font-medium">Authentication required to access the
+        <p class="text-white/60 text-[1rem] leading-relaxed mb-6 font-medium">Authentication required to access the
           EventGuard risk management ecosystem.</p>
 
         <ul class="space-y-6">
           <li class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-[#e2231a] transition-all">
+            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
               <i class="fa-solid fa-fingerprint text-[#e2231a]"></i>
             </div>
             <span class="font-bold text-[0.9rem] text-white/80">Biometric Verification Ready</span>
@@ -29,10 +28,16 @@
             </div>
             <span class="font-bold text-[0.9rem] text-white/80">256-bit AES Encryption</span>
           </li>
+          <li class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+              <i class="fa-solid fa-robot text-[#e2231a]"></i>
+            </div>
+            <span class="font-bold text-[0.9rem] text-white/80">Bot-proof CAPTCHA Guard</span>
+          </li>
         </ul>
       </div>
 
-      <div class="relative z-10 mt-6 md:mt-4 md:mt-6 bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
+      <div class="relative z-10 mt-6 bg-white/5 p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
         <p class="text-[0.7rem] font-black uppercase tracking-[3px] text-[#fac9c8] mb-3">System Status</p>
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
@@ -43,23 +48,23 @@
 
     <!-- Form Area -->
     <div class="md:w-7/12 p-6 md:p-8 lg:p-8 flex flex-col justify-center">
-      <div class="mb-5 md:mb-6">
+      <div class="mb-6">
         <h3 class="text-[#001a35] text-[1.8rem] font-black mb-2 font-heading">Portal Access</h3>
         <p class="text-slate-500 font-medium font-sans">Initialize your secure session below.</p>
       </div>
 
       @if (error()) {
       <div
-        class="mb-4 md:mb-6 p-4 bg-red-50 border-l-4 border-[#e2231a] rounded-r-xl flex items-center gap-4 animate-fade-in-down">
+        class="mb-6 p-4 bg-red-50 border-l-4 border-[#e2231a] rounded-r-xl flex items-center gap-4 animate-fade-in-down">
         <i class="fa-solid fa-circle-exclamation text-[#e2231a]"></i>
         <p class="text-[0.85rem] font-bold text-[#e2231a] m-0">{{ error() }}</p>
       </div>
       }
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
         <div class="space-y-2">
-          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Universal Identity
-            (Email)</label>
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Universal
+            Identity (Email)</label>
           <div class="relative group">
             <i
               class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
@@ -75,8 +80,7 @@
           <div class="flex justify-between items-center ml-1">
             <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider">Access Token
               (Password)</label>
-            <a href="#"
-              class="text-[0.7rem] font-black text-[#004b87] uppercase no-underline hover:text-[#e2231a]">Recover?</a>
+            <a href="#" class="text-[0.7rem] font-black text-[#004b87] uppercase no-underline hover:text-[#e2231a]">Recover?</a>
           </div>
           <div class="relative group">
             <i
@@ -90,6 +94,53 @@
           </div>
         </div>
 
+        <!-- ================================ -->
+        <!-- CAPTCHA WIDGET                   -->
+        <!-- ================================ -->
+        <div class="space-y-2">
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1 flex items-center gap-2">
+            <i class="fa-solid fa-robot text-[#004b87]"></i> Human Verification
+          </label>
+          <div class="flex items-center gap-3"
+            [class.animate-shake]="captchaShake()">
+            <!-- Challenge Box -->
+            <div class="flex-1 flex items-center gap-3 bg-gradient-to-br from-[#001a35] to-[#004b87] p-4 rounded-2xl shadow-lg shadow-[#001a35]/20 select-none">
+              <div class="text-center flex-1">
+                <span class="text-white font-black text-2xl tracking-widest font-mono"
+                  style="text-shadow: 0 2px 10px rgba(0,0,0,0.5); letter-spacing: 4px;">
+                  {{ captchaNum1() }}
+                </span>
+              </div>
+              <div class="text-[#fac9c8] font-black text-xl">{{ captchaOp() }}</div>
+              <div class="text-center flex-1">
+                <span class="text-white font-black text-2xl tracking-widest font-mono"
+                  style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                  {{ captchaNum2() }}
+                </span>
+              </div>
+              <div class="text-white/30 font-black text-xl">=</div>
+              <div class="text-center flex-1">
+                <span class="text-[#fac9c8] font-black text-lg">?</span>
+              </div>
+            </div>
+            <!-- Answer Input -->
+            <input type="number" [(ngModel)]="captchaInput" [ngModelOptions]="{standalone: true}"
+              placeholder="= ?"
+              class="w-20 py-4 text-center bg-slate-50 border-2 rounded-2xl text-[1.1rem] font-black outline-none transition-all focus:bg-white"
+              [class]="captchaError() ? 'border-red-400 bg-red-50 text-red-600' : 'border-transparent focus:border-[#004b87]/20'">
+            <!-- Refresh Button -->
+            <button type="button" (click)="generateCaptcha()"
+              class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-100 text-slate-400 hover:bg-[#004b87]/10 hover:text-[#004b87] transition-all border-none cursor-pointer">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+          @if (captchaError()) {
+          <p class="text-[#e2231a] text-[0.7rem] font-black ml-1 flex items-center gap-1 animate-fade-in">
+            <i class="fa-solid fa-triangle-exclamation"></i> Incorrect answer. A new challenge has been generated.
+          </p>
+          }
+        </div>
+
         <button type="submit" [disabled]="loading()"
           class="w-full bg-[#e2231a] text-white py-5 rounded-2xl font-black text-[0.9rem] uppercase tracking-widest shadow-xl shadow-[#e2231a]/20 hover:shadow-[#e2231a]/40 hover:-translate-y-1 active:translate-y-0 transition-all border-none cursor-pointer disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none flex items-center justify-center gap-3">
           {{ loading() ? 'Authenticating...' : 'Sign In To Console' }}
@@ -97,7 +148,7 @@
         </button>
       </form>
 
-      <div class="mt-6 md:mt-4 md:mt-6 pt-8 border-t border-slate-100 text-center">
+      <div class="mt-6 pt-6 border-t border-slate-100 text-center">
         <p class="text-slate-500 font-medium text-[0.9rem] m-0">
           New to the ecosystem?
           <a routerLink="/register" class="text-[#004b87] font-black no-underline hover:text-[#e2231a] ml-1">Create
@@ -105,7 +156,7 @@
         </p>
       </div>
 
-      <div class="mt-4 md:mt-6 p-5 rounded-2xl bg-[#001a35]/5 border border-[#001a35]/10">
+      <div class="mt-4 p-5 rounded-2xl bg-[#001a35]/5 border border-[#001a35]/10">
         <div class="flex gap-4 items-start">
           <i class="fa-solid fa-circle-info text-[#004b87] mt-1"></i>
           <div class="space-y-1">

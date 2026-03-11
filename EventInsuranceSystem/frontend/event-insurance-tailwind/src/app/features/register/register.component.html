@@ -4,21 +4,19 @@
 
     <!-- Sidebar / Brand Side -->
     <div class="md:w-5/12 bg-[#001a35] text-white p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
-      <!-- Decorative Element -->
       <div class="absolute -top-20 -left-20 w-64 h-64 bg-[#e2231a] opacity-10 rounded-full blur-3xl"></div>
       <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-[#004b87] opacity-20 rounded-full blur-3xl"></div>
 
       <div class="relative z-10">
-        <img src="logo.svg" class="h-8 mb-6 md:mb-4 md:mb-6 brightness-0 invert" alt="Logo">
+        <img src="logo.svg" class="h-8 mb-6 brightness-0 invert" alt="Logo">
         <h2 class="text-[2.2rem] font-black leading-tight mb-6 font-heading">Join the <br><span
             class="text-[#fac9c8]">Guard.</span></h2>
-        <p class="text-white/60 text-[1rem] leading-relaxed mb-5 md:mb-6 font-medium">Initialize your membership to the
+        <p class="text-white/60 text-[1rem] leading-relaxed mb-6 font-medium">Initialize your membership to the
           EventGuard ecosystem and start protecting your assets.</p>
 
         <ul class="space-y-6">
           <li class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-[#e2231a] transition-all">
+            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
               <i class="fa-solid fa-user-shield text-[#e2231a]"></i>
             </div>
             <span class="font-bold text-[0.9rem] text-white/80">Smart Coverage Builder</span>
@@ -29,79 +27,70 @@
             </div>
             <span class="font-bold text-[0.9rem] text-white/80">AI Risk Adjudication</span>
           </li>
+          <li class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+              <i class="fa-solid fa-robot text-[#e2231a]"></i>
+            </div>
+            <span class="font-bold text-[0.9rem] text-white/80">Bot-proof CAPTCHA Guard</span>
+          </li>
         </ul>
       </div>
 
-      <div class="relative z-10 mt-6 md:mt-4 md:mt-6">
+      <div class="relative z-10 mt-6">
         <div class="flex -space-x-3">
-          <div
-            class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-emerald-500 flex items-center justify-center text-[0.6rem] font-black">
-            JD</div>
-          <div
-            class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-amber-500 flex items-center justify-center text-[0.6rem] font-black">
-            AS</div>
-          <div
-            class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-indigo-500 flex items-center justify-center text-[0.6rem] font-black">
-            MK</div>
-          <div
-            class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-slate-700 flex items-center justify-center text-[0.6rem] font-black">
-            +4k</div>
+          <div class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-emerald-500 flex items-center justify-center text-[0.6rem] font-black">JD</div>
+          <div class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-amber-500 flex items-center justify-center text-[0.6rem] font-black">AS</div>
+          <div class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-indigo-500 flex items-center justify-center text-[0.6rem] font-black">MK</div>
+          <div class="w-10 h-10 rounded-full border-2 border-[#001a35] bg-slate-700 flex items-center justify-center text-[0.6rem] font-black">+4k</div>
         </div>
         <p class="text-[0.7rem] font-bold text-white/50 mt-3 uppercase tracking-widest">Operators onboarded today</p>
       </div>
     </div>
 
     <!-- Form Area -->
-    <div class="md:w-7/12 p-6 md:p-8 lg:p-8 flex flex-col justify-center">
-      <div class="mb-5 md:mb-6">
+    <div class="md:w-7/12 p-6 md:p-8 flex flex-col justify-center">
+      <div class="mb-5">
         <h3 class="text-[#001a35] text-[1.8rem] font-black mb-2 font-heading">Create Account</h3>
         <p class="text-slate-500 font-medium font-sans">Establish your secure universal identity.</p>
       </div>
 
       @if (error()) {
-      <div
-        class="mb-4 md:mb-6 p-4 bg-red-50 border-l-4 border-[#e2231a] rounded-r-xl flex items-center gap-4 animate-fade-in-down">
+      <div class="mb-5 p-4 bg-red-50 border-l-4 border-[#e2231a] rounded-r-xl flex items-center gap-4 animate-fade-in-down">
         <i class="fa-solid fa-circle-exclamation text-[#e2231a]"></i>
         <p class="text-[0.85rem] font-bold text-[#e2231a] m-0">{{ error() }}</p>
       </div>
       }
 
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-2 md:col-span-2">
-          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Legal Full
-            Name</label>
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Legal Full Name</label>
           <div class="relative group">
-            <i
-              class="fa-solid fa-user-gear absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+            <i class="fa-solid fa-user-gear absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
             <input formControlName="fullName" type="text" placeholder="John Doe"
-              class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 focus:shadow-xl focus:shadow-[#004b87]/5">
+              class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
           </div>
           @if (registerForm.get('fullName')?.touched && registerForm.get('fullName')?.errors?.['required']) {
-          <p class="text-[#e2231a] text-[0.7rem] font-black mt-1 ml-1 animate-fade-in">Name is mandatory</p>
+          <p class="text-[#e2231a] text-[0.7rem] font-black mt-1 ml-1">Name is mandatory</p>
           }
         </div>
 
         <div class="space-y-2 md:col-span-2">
-          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Identity Endpoint
-            (Email)</label>
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Identity Endpoint (Email)</label>
           <div class="relative group">
-            <i
-              class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+            <i class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
             <input formControlName="email" type="email" placeholder="operator@domain.com"
-              class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 focus:shadow-xl focus:shadow-[#004b87]/5">
+              class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
           </div>
         </div>
 
-        <div class="space-y-2 md:col-span-1">
-          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Mobile
-            Comm.</label>
-          <input formControlName="phoneNumber" type="tel" placeholder="+1 (555) 000-0000"
-            class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+        <div class="space-y-2">
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Mobile Comm.</label>
+          <input formControlName="phoneNumber" type="tel" placeholder="+91 98765 43210"
+            class="w-full px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
         </div>
 
-        <div class="space-y-2 md:col-span-1">
-          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Access
-            Token</label>
+        <div class="space-y-2">
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Access Token</label>
           <div class="relative group">
             <input formControlName="password" [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••"
               class="w-full pl-6 pr-14 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
@@ -112,6 +101,46 @@
           </div>
         </div>
 
+        <!-- ================================ -->
+        <!-- CAPTCHA WIDGET                   -->
+        <!-- ================================ -->
+        <div class="md:col-span-2 space-y-2">
+          <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1 flex items-center gap-2">
+            <i class="fa-solid fa-robot text-[#004b87]"></i> Human Verification
+          </label>
+          <div class="flex items-center gap-3" [class.animate-shake]="captchaShake()">
+            <!-- Challenge Box -->
+            <div class="flex-1 flex items-center gap-3 bg-gradient-to-br from-[#001a35] to-[#004b87] p-4 rounded-2xl shadow-lg shadow-[#001a35]/20 select-none">
+              <div class="text-center flex-1">
+                <span class="text-white font-black text-2xl font-mono" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5); letter-spacing:4px;">{{ captchaNum1() }}</span>
+              </div>
+              <div class="text-[#fac9c8] font-black text-xl">{{ captchaOp() }}</div>
+              <div class="text-center flex-1">
+                <span class="text-white font-black text-2xl font-mono" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">{{ captchaNum2() }}</span>
+              </div>
+              <div class="text-white/30 font-black text-xl">=</div>
+              <div class="text-center flex-1">
+                <span class="text-[#fac9c8] font-black text-lg">?</span>
+              </div>
+            </div>
+            <!-- Answer Input -->
+            <input type="number" [(ngModel)]="captchaInput" [ngModelOptions]="{standalone: true}"
+              placeholder="= ?"
+              class="w-20 py-4 text-center bg-slate-50 border-2 rounded-2xl text-[1.1rem] font-black outline-none transition-all focus:bg-white"
+              [class]="captchaError() ? 'border-red-400 bg-red-50 text-red-600' : 'border-transparent focus:border-[#004b87]/20'">
+            <!-- Refresh -->
+            <button type="button" (click)="generateCaptcha()"
+              class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-100 text-slate-400 hover:bg-[#004b87]/10 hover:text-[#004b87] transition-all border-none cursor-pointer">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+          @if (captchaError()) {
+          <p class="text-[#e2231a] text-[0.7rem] font-black ml-1 flex items-center gap-1 animate-fade-in">
+            <i class="fa-solid fa-triangle-exclamation"></i> Incorrect answer. A new challenge has been generated.
+          </p>
+          }
+        </div>
+
         <button type="submit" [disabled]="loading()"
           class="md:col-span-2 w-full bg-[#e2231a] text-white py-5 rounded-2xl font-black text-[0.9rem] uppercase tracking-widest shadow-xl shadow-[#e2231a]/20 hover:shadow-[#e2231a]/40 hover:-translate-y-1 active:translate-y-0 transition-all border-none cursor-pointer disabled:opacity-50 flex items-center justify-center gap-3">
           {{ loading() ? 'Provisioning...' : 'Establish Identity' }}
@@ -119,11 +148,10 @@
         </button>
       </form>
 
-      <div class="mt-6 md:mt-4 md:mt-6 pt-8 border-t border-slate-100 text-center">
+      <div class="mt-5 pt-6 border-t border-slate-100 text-center">
         <p class="text-slate-500 font-medium text-[0.9rem] m-0">
           Already verified?
-          <a routerLink="/login" class="text-[#004b87] font-black no-underline hover:text-[#e2231a] ml-1">Authorize
-            Session</a>
+          <a routerLink="/login" class="text-[#004b87] font-black no-underline hover:text-[#e2231a] ml-1">Authorize Session</a>
         </p>
       </div>
     </div>
