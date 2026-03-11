@@ -1,0 +1,130 @@
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-shield-halved text-secondary"></i> EventGuard
+    </div>
+    <nav class="sidebar-nav">
+      <a (click)="setTab('overview')" [class.active]="tab() === 'overview'"><i class="fa-solid fa-chart-pie"></i>
+        Overview</a>
+      <a (click)="setTab('request')" [class.active]="tab() === 'request'"><i class="fa-solid fa-file-circle-plus"></i>
+        New Request</a>
+      <a (click)="setTab('my-requests')" [class.active]="tab() === 'my-requests'"><i class="fa-solid fa-inbox"></i> My
+        Requests <span class="nav-badge" *ngIf="myRequests.length">{{myRequests.length}}</span></a>
+      <a (click)="setTab('applications')" [class.active]="tab() === 'applications'"><i
+          class="fa-solid fa-clipboard-list"></i> My Applications <span class="nav-badge"
+          *ngIf="myApplications.length">{{myApplications.length}}</span></a>
+      <a (click)="setTab('policies')" [class.active]="tab() === 'policies'"><i class="fa-solid fa-file-contract"></i> My
+        Policies</a>
+      <a (click)="setTab('payments')" [class.active]="tab() === 'payments'"><i class="fa-solid fa-credit-card"></i>
+        Payments</a>
+      <a (click)="setTab('claims')" [class.active]="tab() === 'claims'"><i class="fa-solid fa-file-lines"></i> My
+        Claims</a>
+      <a (click)="setTab('analytics')" [class.active]="tab() === 'analytics'"><i class="fa-solid fa-chart-line"></i>
+        Analytics</a>
+    </nav>
+  </aside>
+
+  <main class="dashboard-main">
+    <div class="topbar">
+      <h1>
+        <span *ngIf="tab() === 'overview'">Overview</span>
+        <span *ngIf="tab() === 'request'">New Insurance Request</span>
+        <span *ngIf="tab() === 'my-requests'">My Requests</span>
+        <span *ngIf="tab() === 'applications'">My Applications</span>
+        <span *ngIf="tab() === 'policies'">My Policies</span>
+        <span *ngIf="tab() === 'payments'">Payments History</span>
+        <span *ngIf="tab() === 'claims'">My Claims</span>
+        <span *ngIf="tab() === 'analytics'">Analytics Dashboard</span>
+      </h1>
+      <span class="user-badge"><i class="fa-solid fa-user"></i> {{ userName }}</span>
+    </div>
+
+    <!-- ==================== NEW REQUEST ==================== -->
+    <div [hidden]="tab() !== 'request'" class="tab-content animate-fade-in">
+      <div class="form-card">
+        <h2>Submit Insurance Request</h2>
+        <p class="subtitle">Tell us about your event and we'll find the perfect coverage.</p>
+
+        <div class="grid-form">
+          <div class="form-group">
+            <label>Event Type</label>
+            <select [(ngModel)]="request.eventType" class="form-control">
+              <option value="">Select event type...</option>
+              <option>Wedding</option>
+              <option>Concert</option>
+              <option>Conference</option>
+              <option>Sports Event</option>
+              <option>Festival</option>
+              <option>Corporate Event</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Event Date</label>
+            <input type="date" [(ngModel)]="request.eventDate" class="form-control" [min]="minDate()" />
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Event Location (Search)</label>
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" [(ngModel)]="request.eventLocation" (input)="onLocationInput($event)"
+              class="form-control search-field" placeholder="Search City, State..." autocomplete="off" />
+          </div>
+          <div *ngIf="locationResults.length > 0" class="location-dropdown">
+            <div *ngFor="let loc of locationResults" (click)="selectLocation(loc)" class="location-item">
+              <i class="fa-solid fa-location-dot"></i> {{ loc.display_name }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Correct Map Element -->
+        <div class="map-container-premium mb-4">
+          <div id="request-map-core"
+            style="height: 350px; width: 100%; border-radius: 12px; border: 1px solid #ddd; background: #f8fafc;">
+            <div class="map-placeholder">
+              <i class="fa-solid fa-map-location-dot fa-spin-pulse"></i>
+              <p>Initializing Real-time Mapping...</p>
+              <p class="debug text-[0.6rem] opacity-30">Map Engine v1.0.4-premium</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-form">
+          <div class="form-group">
+            <label>Expected Attendees</label>
+            <input type="number" [(ngModel)]="request.estimatedAttendees" class="form-control" placeholder="500" />
+          </div>
+          <div class="form-group">
+            <label>Event Budget (₹)</label>
+            <input type="number" [(ngModel)]="request.eventBudget" class="form-control" placeholder="500000" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description & Risk Factors</label>
+          <textarea [(ngModel)]="request.riskFactors" class="form-control" rows="3"
+            placeholder="Describe risks..."></textarea>
+        </div>
+
+        <button class="btn-primary-large" [disabled]="submitting()" (click)="submitRequest()">
+          {{ submitting() ? 'Submitting...' : 'Submit Request' }}
+        </button>
+        <div *ngIf="requestMsg()" class="alert" [class.alert-success]="!requestErr()"
+          [class.alert-error]="requestErr()">
+          {{ requestMsg() }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB FALLBACKS ==================== -->
+    <div
+      *ngIf="['overview', 'my-requests', 'applications', 'policies', 'payments', 'claims', 'analytics'].includes(tab())"
+      class="placeholder-section">
+      <img src="dashboard_empty_docs_1773047856042.png" alt="Empty" class="placeholder-img" />
+      <p class="placeholder-text">Content is currently being localized to the new premium interface system.</p>
+      <button class="btn-secondary" (click)="loadMyRequests()">Refresh Data</button>
+    </div>
+
+  </main>
+</div>

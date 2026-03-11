@@ -1,0 +1,6 @@
+@reference "../styles.css";
+
+/* Minimal app-level styles - only what can't be done inline */
+.notif-dropdown-enter {
+    animation: slide-down 0.2s ease-out both;
+}

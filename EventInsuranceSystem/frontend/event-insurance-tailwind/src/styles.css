@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap');
+@import 'leaflet/dist/leaflet.css';
+@import "tailwindcss";
+
+/* ===== Hartford Theme ===== */
+@theme {
+    --color-primary: #004b87;
+    --color-primary-light: #0060ad;
+    --color-primary-dark: #003366;
+    --color-secondary: #e2231a;
+    --color-secondary-hover: #b81710;
+    --color-surface: #FFFFFF;
+    --color-background: #f4f6f8;
+    --color-text-primary: #1A202C;
+    --color-text-secondary: #4A5568;
+    --color-border: #E2E8F0;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+
+    /* Custom animations */
+    --animate-fade-in: fade-in 0.6s ease-out both;
+    --animate-fade-in-up: fade-in-up 0.6s ease-out both;
+    --animate-fade-in-down: fade-in-down 0.5s ease-out both;
+    --animate-fade-in-left: fade-in-left 0.5s ease-out both;
+    --animate-fade-in-right: fade-in-right 0.5s ease-out both;
+    --animate-scale-in: scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    --animate-slide-up: slide-up 0.4s ease-out both;
+    --animate-slide-down: slide-down 0.3s ease-out both;
+    --animate-bounce-in: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+    --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
+    --animate-shimmer: shimmer 2s linear infinite;
+    --animate-float: float-y 3s ease-in-out infinite;
+    --animate-glow: glow-pulse 2s ease-in-out infinite;
+    --animate-tab-in: tab-in 0.25s ease-out both;
+    --animate-hero-text: hero-text 1s ease-out both;
+    --animate-stagger-1: fade-in-up 0.5s ease-out 0.1s both;
+    --animate-stagger-2: fade-in-up 0.5s ease-out 0.2s both;
+    --animate-stagger-3: fade-in-up 0.5s ease-out 0.3s both;
+    --animate-stagger-4: fade-in-up 0.5s ease-out 0.4s both;
+    --animate-stagger-5: fade-in-up 0.5s ease-out 0.5s both;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fade-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce-in {
+    from {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    70% {
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse-soft {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes float-y {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(0, 75, 135, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(0, 75, 135, 0.4);
+    }
+}
+
+@keyframes tab-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hero-text {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@layer base {
+    body {
+        font-family: var(--font-sans);
+        background-color: var(--color-background);
+        color: var(--color-text-primary);
+        line-height: normal;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+        color: var(--color-primary);
+        font-weight: 700;
+        margin: 0;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Selection */
+::selection {
+    background: rgba(0, 75, 135, 0.15);
+    color: var(--color-primary-dark);
+}
+
+/* Map containment */
+.leaflet-pane {
+    z-index: 1 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 2 !important;
+}

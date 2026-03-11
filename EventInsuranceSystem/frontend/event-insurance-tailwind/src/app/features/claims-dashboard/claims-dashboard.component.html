@@ -1,0 +1,360 @@
+<!-- Mobile Menu Backdrop -->
+<div *ngIf="isSidebarOpen()" (click)="toggleSidebar()"
+  class="lg:hidden fixed inset-0 bg-[#001a35]/60 z-[1001] backdrop-blur-sm animate-fade-in"></div>
+
+<!-- Mobile Branding & Toggle -->
+<div
+  class="lg:hidden fixed top-0 left-0 right-0 h-[70px] bg-[#001a35] flex items-center justify-between px-4 md:px-5 z-[1000] border-b border-white/5">
+  <img src="logo.svg" class="h-8 brightness-0 invert" alt="Logo">
+  <button (click)="toggleSidebar()" class="text-white p-2 hover:bg-white/10 rounded-lg transition-colors">
+    <i class="fa-solid" [class]="isSidebarOpen() ? 'fa-xmark text-2xl' : 'fa-bars-staggered text-xl'"></i>
+  </button>
+</div>
+
+<!-- Claims Officer Sidebar -->
+<aside
+  class="fixed top-0 left-0 bottom-0 w-[240px] bg-[#001a35] text-white overflow-y-auto transition-transform duration-300 z-[1002] shadow-[20px_0_50px_rgba(0,0,0,0.1)] font-sans flex flex-col"
+  [class.translate-x-0]="isSidebarOpen()" [class.-translate-x-full]="!isSidebarOpen()" [class.lg:translate-x-0]="true">
+
+  <div class="p-8 pb-12 border-b border-white/5">
+    <img src="logo.svg" alt="The Hartford" class="h-10 mb-5 md:mb-6 cursor-pointer object-contain brightness-0 invert"
+      routerLink="/">
+
+    <div class="flex items-center gap-4 group">
+      <div
+        class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#004b87] to-[#003866] flex items-center justify-center text-xl font-black shadow-lg shadow-[#004b87]/20 group-hover:scale-110 transition-transform">
+        {{ userName.charAt(0).toUpperCase() }}
+      </div>
+      <div class="overflow-hidden">
+        <p class="text-[0.7rem] font-black text-[#fac9c8] uppercase tracking-[2px] m-0 mb-1">Claims Adjudicator</p>
+        <p class="text-white font-bold text-[1rem] truncate m-0">{{ userName }}</p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="px-6 py-4 space-y-2 flex-grow">
+    <button (click)="tab.set('assigned'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'assigned' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-list-check w-6 text-center"></i> My Queue
+    </button>
+
+    <button (click)="tab.set('all'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'all' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-layer-group w-6 text-center"></i> Global Ledger
+    </button>
+
+    <button (click)="tab.set('analytics'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'analytics' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-magnifying-glass-chart w-6 text-center"></i> Claim Insights
+    </button>
+  </nav>
+
+  <div class="p-6 mt-auto">
+    <a routerLink="/"
+      class="flex items-center gap-4 px-4 md:px-5 py-4 rounded-xl text-[0.9rem] font-bold text-white/50 hover:text-white hover:bg-white/5 no-underline transition-all group">
+      <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> Exit Portal
+    </a>
+  </div>
+</aside>
+
+<!-- Main Claims Content Area -->
+<main class="lg:ml-[240px] bg-[#f8fafc] min-h-screen transition-all duration-300 pt-[70px] lg:pt-0">
+  <div class="p-4 lg:p-8 pb-0">
+    <header
+      class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-4 md:mb-6 bg-white p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-slate-100 gap-3 md:gap-4">
+      <div class="flex items-center gap-3 md:gap-4">
+        <div
+          class="w-12 h-12 bg-[#e2231a] rounded-2xl flex items-center justify-center text-white text-2xl shadow-xl shadow-red-50">
+          <i class="fa-solid fa-scale-balanced"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl text-[#001a35] font-black m-0 font-heading">
+            Adjudication <span class="text-[#e2231a]">Command</span>
+          </h1>
+          <div class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+            <p class="text-[0.7rem] text-slate-400 font-black m-0 uppercase tracking-[2px] mt-1">Operational Status:
+              <span class="text-emerald-500">Integrity Protocol Active</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 bg-slate-50 px-4 md:px-5 py-3 rounded-2xl border border-slate-100">
+        <i class="fa-solid fa-user-shield text-[#004b87]"></i>
+        <span class="text-[#001a35] font-black text-[0.85rem] uppercase tracking-widest">{{ userName }}</span>
+      </div>
+    </header>
+
+    <!-- Claims Intelligence Filter -->
+    @if (tab() !== 'analytics') {
+    <div
+      class="mb-8 flex flex-wrap items-center gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] animate-fade-in-down">
+      <div class="relative flex-1 min-w-[280px]">
+        <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" [(ngModel)]="filterTerm" placeholder="Search my claims (ID, Policy, Status)..."
+          class="w-full pl-14 pr-6 py-4 bg-slate-50 border-none rounded-2xl text-[0.9rem] font-medium focus:ring-4 focus:ring-[#004b87]/5 outline-none transition-all placeholder:text-slate-300">
+      </div>
+      <div class="flex items-center gap-4 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">From</label>
+        <input type="date" [(ngModel)]="startDt"
+          class="bg-transparent border-none text-[0.85rem] font-bold text-[#001a35] outline-none">
+      </div>
+      <div class="flex items-center gap-4 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">To</label>
+        <input type="date" [(ngModel)]="endDt"
+          class="bg-transparent border-none text-[0.85rem] font-bold text-[#001a35] outline-none">
+      </div>
+      <button (click)="resetFilters()"
+        class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#f8fafc] text-white/40 hover:text-[#e2231a] hover:bg-red-50 transition-all border-none cursor-pointer">
+        <i class="fa-solid fa-rotate-left"></i>
+      </button>
+    </div>
+    }
+
+  </div>
+
+  <div class="px-4 md:px-4 md:px-5 lg:px-6 md:px-8 max-w-7xl mx-auto pb-20">
+
+    <!-- ASSIGNED CLAIMS -->
+    @if (tab() === 'assigned') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Assigned Adjudication Queue</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Formal claims requiring final
+            integrity sign-off</p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm"
+          (click)="loadMyClaims()"><i class="fa-solid fa-sync"></i> SYNC QUEUE</button>
+      </div>
+
+      @if (myClaims.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[200px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/surreal-hourglass.svg" alt="Queue Clear" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem]">Adjudication queue clear. No new
+          anomalies detected.</p>
+      </div>
+      }
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (c of filterList(myClaims); track c.id) {
+        <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl transition-all hover:shadow-2xl">
+          <div class="flex justify-between items-start mb-4 md:mb-6 pb-8 border-b border-slate-50">
+            <div>
+              <h3 class="text-[#001329] text-xl font-black font-heading mb-1">CLAIM #{{c.id}}</h3>
+              <div class="flex gap-3 mt-1">
+                <span
+                  class="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 border border-slate-100 px-3 py-1 rounded-lg">Policy:
+                  #{{c.policyId}}</span>
+                <span
+                  class="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 border border-slate-100 px-3 py-1 rounded-lg">Client:
+                  #{{c.customerId}}</span>
+              </div>
+            </div>
+            <span class="px-5 py-2 rounded-xl text-[0.6rem] font-black uppercase tracking-widest italic border"
+              [class]="(c.status==='Approved'||c.status==='Settled')?'bg-emerald-50 text-emerald-700 border-emerald-100':(c.status==='Rejected')?'bg-red-50 text-red-700 border-red-100':'bg-amber-50 text-amber-700 border-amber-100'">{{c.status}}</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-8 rounded-2xl mb-5 md:mb-6 space-y-6">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Requested Indemnity</span>
+              <b class="text-[1.2rem] text-[#001a35] font-black">₹{{c.claimAmount | number}}</b>
+            </div>
+
+            <div *ngIf="c.fraudScore" class="pt-6 border-t border-slate-100/50 flex justify-between items-center">
+              <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Integrity Score
+                (AI)</span>
+              <div class="flex items-center gap-3">
+                <span class="text-[1rem] font-black"
+                  [class]="c.fraudFlag?'text-red-600 animate-pulse':'text-emerald-600'">{{c.fraudScore}}% Risk</span>
+                <i class="fa-solid"
+                  [class]="c.fraudFlag?'fa-triangle-exclamation text-red-600':'fa-circle-check text-emerald-600'"></i>
+              </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100/50">
+              <span
+                class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem] block mb-3 leading-none">CLAIM
+                NARRATIVE</span>
+              <p class="text-slate-600 text-[0.85rem] leading-relaxed italic m-0">"{{c.description}}"</p>
+            </div>
+          </div>
+
+          <!-- Adjudication Controls -->
+          <div *ngIf="c.status === 'UnderReview' || c.status === 'Submitted'" class="space-y-6">
+            <button
+              class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black text-[0.8rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-emerald-700 active:scale-95 shadow-xl shadow-emerald-600/10 disabled:opacity-50 border-none"
+              (click)="runFraud(c)" [disabled]="loading()">
+              <i class="fa-solid fa-robot mr-3"></i>TRIGGER INTEGRITY ANALYSIS
+            </button>
+
+            <div class="space-y-2">
+              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">ADJUDICATION
+                FINDINGS</label>
+              <textarea [(ngModel)]="c.notes"
+                class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
+                rows="3" placeholder="Enter findings..."></textarea>
+            </div>
+
+            <div class="flex gap-4">
+              <button
+                class="flex-1 bg-emerald-600 text-white py-4 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-emerald-700 active:scale-95 shadow-lg border-none"
+                [disabled]="loading()" (click)="approve(c)">
+                <i class="fa-solid fa-circle-check mr-2"></i>APPROVE
+              </button>
+              <button
+                class="flex-1 bg-slate-100 text-slate-500 py-4 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-red-50 hover:text-red-700 active:scale-95 border-none"
+                [disabled]="loading()" (click)="reject(c)">
+                <i class="fa-solid fa-xmark mr-2"></i>REJECT
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="c.status === 'Approved'" class="space-y-6">
+            <div class="space-y-2">
+              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">SETTLEMENT
+                PROTOCOL</label>
+              <textarea [(ngModel)]="c.settlementNotes"
+                class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
+                rows="3" placeholder="Enter settlement details..."></textarea>
+            </div>
+            <button
+              class="w-full bg-[#001a35] text-white py-5 rounded-2xl font-black text-[0.8rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-[#e2231a] active:scale-95 shadow-2xl border-none"
+              [disabled]="loading()" (click)="settle(c)">
+              <i class="fa-solid fa-coins mr-3"></i>DISPATCH INDEMNITY
+            </button>
+          </div>
+
+          <div *ngIf="c._msg"
+            class="mt-6 p-6 rounded-2xl text-[0.8rem] font-bold flex items-center gap-3 animate-fade-in"
+            [class]="c._err ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+            <i class="fa-solid" [class]="c._err ? 'fa-triangle-exclamation' : 'fa-circle-check'"></i>
+            {{c._msg}}
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- ALL RECORDS -->
+    @if (tab() === 'all') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Indemnity Ledger</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Global historic claims registry
+          </p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm"
+          (click)="loadAllClaims()"><i class="fa-solid fa-sync"></i> REFRESH LEDGER</button>
+      </div>
+
+      @if (allClaims.length === 0) {
+      <div class="bg-white rounded-3xl py-24 text-center border-4 border-dashed border-slate-100">
+        <div
+          class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 text-2xl mb-4 mx-auto">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <p class="text-slate-400 font-black uppercase tracking-widest text-[0.75rem]">Registry empty. No data recorded.
+        </p>
+      </div>
+      }
+
+      <div class="bg-white rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100"
+        *ngIf="allClaims.length > 0">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Case ID</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Asset/Profile</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Indemnity</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Integrity Check
+              </th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr *ngFor="let c of allClaims" class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">#{{c.id}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <div class="text-[0.8rem] font-bold text-slate-600">Policy #{{c.policyId}}</div>
+                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mt-1">Client:
+                  {{c.customerId}}</div>
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">₹{{c.claimAmount|number}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <div *ngIf="c.fraudScore" class="flex items-center gap-2">
+                  <span class="text-[0.85rem] font-black"
+                    [class]="c.fraudFlag?'text-red-600':'text-emerald-600'">{{c.fraudScore}}%</span>
+                  <i class="fa-solid"
+                    [class]="c.fraudFlag?'fa-triangle-exclamation text-red-600':'fa-circle-check text-emerald-600'"></i>
+                </div>
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <span class="px-4 py-1.5 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border italic"
+                  [class]="(c.status==='Approved'||c.status==='Settled')?'bg-emerald-50 text-emerald-700 border-emerald-100':(c.status==='Rejected')?'bg-red-50 text-red-700 border-red-100':'bg-amber-50 text-amber-700 border-amber-100'">{{c.status}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
+
+    <!-- ANALYTICS -->
+    @if (tab() === 'analytics') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Integrity Analytics</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Fraud volatility and processing
+            metrics</p>
+        </div>
+        <div class="flex items-center gap-4 bg-white px-4 md:px-5 py-2 rounded-2xl border border-slate-100 shadow-sm">
+          <label class="font-black text-slate-400 text-[0.65rem] uppercase tracking-widest">Metric:</label>
+          <select [(ngModel)]="clmSelectedChart" (ngModelChange)="onClmChartChange()"
+            class="py-2 border-none font-black text-[#001a35] text-[0.8rem] outline-none bg-transparent cursor-pointer">
+            <option value="statusBreakdown">Resolution Distribution</option>
+            <option value="fraudAnalysis">Fraud Vector Spectrum</option>
+            <option value="processingSummary">Adjudication Velocity</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-5 md:p-8 shadow-[0_40px_100_rgba(0,0,0,0.04)] border border-slate-100">
+        <h4
+          class="text-[#001329] text-[0.75rem] font-black uppercase tracking-[2px] mb-4 md:mb-6 bg-slate-50 inline-block px-4 md:px-5 py-2 rounded-full">
+          {{ clmChartTitles[clmSelectedChart] }}</h4>
+        <div class="relative h-[300px] w-full bg-slate-50/30 rounded-2xl p-8 border border-slate-100/50">
+          <canvas id="clmAnalyticsCanvas" class="w-full h-full"></canvas>
+        </div>
+        @if (clmChartSummary) {
+        <div
+          class="mt-4 md:mt-6 p-8 bg-[#001a35]/[0.02] rounded-2xl border-l-8 border-[#001a35] flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-[#001a35] flex items-center justify-center text-white shrink-0">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <p class="text-[#001a35] text-[0.9rem] font-semibold leading-relaxed m-0 italic">{{ clmChartSummary }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</main>

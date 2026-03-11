@@ -1,0 +1,183 @@
+<div class="bg-[#f8fafc] min-h-screen">
+  <!-- Hero Section -->
+  <section class="relative bg-[#001a35] py-24 overflow-hidden group">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1560264280-88b68371db39?auto=format&fit=crop&q=80&w=2000" alt="Claims Concierge"
+        class="w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-[10s]">
+      <div class="absolute inset-0 bg-gradient-to-r from-[#001a35] via-[#001a35]/40 to-transparent"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 md:px-5 relative z-10">
+      <div class="max-w-3xl">
+        <span
+          class="inline-block bg-[#e2231a] text-white text-[0.7rem] font-black uppercase tracking-[3px] px-4 py-2 rounded-lg mb-6 animate-fade-in-down">Integrity
+          & Speed</span>
+        <h1 class="text-white text-5xl md:text-6xl font-black mb-4 md:mb-6 leading-tight font-heading animate-fade-in-up">Claims
+          <br><span class="text-[#fac9c8]">Concierge.</span>
+        </h1>
+        <p class="text-white/60 text-xl font-medium leading-relaxed mb-6 md:mb-4 md:mb-6 animate-fade-in-up"
+          style="animation-delay: 0.1s">File a new claim or synchronize with our AI adjudication engine to track
+          settlement progress in real-time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="max-w-7xl mx-auto px-4 md:px-5 -mt-16 relative z-20 pb-20 font-sans">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-3 md:gap-4">
+
+      <!-- Submission Form -->
+      <div class="lg:col-span-12 xl:col-span-8">
+        <div
+          class="bg-white rounded-2xl p-5 md:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-slate-100 animate-scale-in">
+          <div class="flex items-center gap-4 mb-5 md:mb-6">
+            <div
+              class="w-12 h-12 rounded-2xl bg-[#e2231a] flex items-center justify-center shadow-lg shadow-[#e2231a]/20">
+              <i class="fa-solid fa-flag text-white text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-[#001329] text-2xl font-black font-heading m-0">Initialize Claim</h3>
+              <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest mt-1">Prototype Mode: Customer
+                ID 2 / Policy ID 1</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3 md:gap-4 mb-5 md:mb-6">
+            <div class="space-y-2">
+              <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Claim Quantum
+                (₹)</label>
+              <div class="relative group">
+                <i
+                  class="fa-solid fa-indian-rupee-sign absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+                <input type="number" [(ngModel)]="claimAmount" placeholder="15,000"
+                  class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 focus:shadow-xl focus:shadow-[#004b87]/5">
+              </div>
+            </div>
+
+            <div class="space-y-2 md:col-span-2">
+              <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Critical
+                Incident Description</label>
+              <textarea [(ngModel)]="description" rows="4"
+                placeholder="Detail the specific circumstances of the loss event..."
+                class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-xl text-[0.95rem] font-medium text-[#001329] outline-none transition-all focus:bg-white focus:border-[#004b87]/20 focus:shadow-2xl focus:shadow-[#004b87]/10 placeholder:text-slate-300 min-h-[140px]"></textarea>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 pt-6 border-t border-slate-50">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-shield-halved text-[#004b87] text-xl"></i>
+              <p class="text-slate-500 text-sm font-medium m-0">Your data is secured with AES-256 encryption.</p>
+            </div>
+
+            <button *ngIf="isCustomer()" [disabled]="loading"
+              class="bg-[#001329] text-white px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-[#001329]/20 hover:shadow-[#001329]/40 hover:-translate-y-1 active:translate-y-0 transition-all border-none cursor-pointer disabled:opacity-50 flex items-center justify-center gap-3"
+              (click)="submitClaim()">
+              <i class="fa-solid" [class]="loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+              {{ loading ? 'ENCRYPTING...' : 'DISPATCH CLAIM' }}
+            </button>
+            <div *ngIf="!isCustomer()" class="p-4 bg-[#e2231a]/5 rounded-2xl border border-[#e2231a]/10">
+              <p class="text-[#e2231a] text-[0.7rem] font-black m-0 uppercase tracking-widest"><i
+                  class="fa-solid fa-lock mr-2"></i>Operator Authentication Required</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Result Box -->
+        <div *ngIf="recentClaimId"
+          class="mt-4 md:mt-6 bg-[#001a35] rounded-2xl p-5 md:p-8 text-white shadow-2xl animate-scale-in overflow-hidden relative">
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#e2231a] opacity-10 rounded-full blur-3xl"></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center gap-4 mb-4 md:mb-6">
+              <div
+                class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/10">
+                <i class="fa-solid fa-check text-emerald-500"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-black m-0 font-heading">Claim Ref: #{{recentClaimId}}</h4>
+                <p class="text-white/40 text-[0.7rem] font-bold uppercase tracking-[2px] mt-1">Status: Logged into
+                  System</p>
+              </div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-4 md:mb-6 backdrop-blur-md">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-3 md:gap-4">
+                <div>
+                  <h5 class="text-[#fac9c8] text-[0.7rem] font-black uppercase tracking-widest mb-4">Neural Fraud
+                    Screening</h5>
+                  <p class="text-white/60 text-sm font-medium mb-0">Our AI can perform an immediate integrity scan on
+                    your submission. This speeds up the adjudication process.</p>
+                </div>
+                <button [disabled]="loadingFraud"
+                  class="shrink-0 bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl font-black text-[0.75rem] uppercase tracking-widest hover:bg-[#e2231a] hover:text-white transition-all border-none cursor-pointer disabled:opacity-50 flex items-center gap-2"
+                  (click)="runFraudCheck()">
+                  <i class="fa-solid" [class]="loadingFraud ? 'fa-spinner fa-spin' : 'fa-brain'"></i>
+                  {{ loadingFraud ? 'SYNCING...' : 'INITIATE NEURAL SCAN' }}
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="fraudResult" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 animate-fade-in">
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <p class="text-white/40 text-[0.65rem] font-black uppercase tracking-widest mb-2">Simulated Risk</p>
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl font-black"
+                    [class]="fraudResult.fraudFlag ? 'text-amber-500' : 'text-emerald-500'">{{fraudResult.riskLevel}}</span>
+                  <i class="fa-solid"
+                    [class]="fraudResult.fraudFlag ? 'fa-triangle-exclamation text-amber-500' : 'fa-circle-check text-emerald-500'"></i>
+                </div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <p class="text-white/40 text-[0.65rem] font-black uppercase tracking-widest mb-2">Integrity Score</p>
+                <div class="text-2xl font-black">{{fraudResult.fraudScore}}/100</div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <p class="text-white/40 text-[0.65rem] font-black uppercase tracking-widest mb-2">Neural Output</p>
+                <p class="text-[0.8rem] font-medium leading-relaxed m-0 italic text-white/80">"{{fraudResult.message}}"
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Info -->
+      <div class="lg:col-span-12 xl:col-span-4 space-y-8">
+        <div
+          class="bg-white rounded-2xl p-8 shadow-[0_40px_100px_rgba(0,0,0,0.06)] border border-slate-100 animate-fade-in-right"
+          style="animation-delay: 0.1s">
+          <h4 class="text-[#001329] text-xl font-black mb-6 font-heading border-b border-slate-50 pb-4">Claims Lifecycle
+          </h4>
+          <ul
+            class="space-y-8 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-50">
+            <li class="relative pl-10">
+              <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-[#004b87] border-4 border-white shadow-md z-10">
+              </div>
+              <p class="text-[#001329] font-black text-sm mb-1 uppercase tracking-tight">Step 01: Submission</p>
+              <p class="text-slate-400 text-xs font-medium m-0">Digitally log your loss event incident report.</p>
+            </li>
+            <li class="relative pl-10">
+              <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-slate-200 border-4 border-white z-10"></div>
+              <p class="text-slate-400 font-black text-sm mb-1 uppercase tracking-tight">Step 02: Verification</p>
+              <p class="text-slate-300 text-xs font-medium m-0">Neural analysis and officer review phase.</p>
+            </li>
+            <li class="relative pl-10">
+              <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-slate-200 border-4 border-white z-10"></div>
+              <p class="text-slate-400 font-black text-sm mb-1 uppercase tracking-tight">Step 03: Settlement</p>
+              <p class="text-slate-300 text-xs font-medium m-0">Final adjudication and disbursement.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div
+          class="bg-gradient-to-br from-[#004b87] to-[#001a35] rounded-2xl p-8 text-white shadow-xl animate-fade-in-right"
+          style="animation-delay: 0.2s">
+          <i class="fa-solid fa-phone-volume text-[#e2231a] text-xl md:text-2xl mb-6"></i>
+          <h4 class="text-xl font-black mb-2 font-heading">Emergency Line</h4>
+          <p class="text-white/60 text-sm mb-6 font-medium">Available 24/7 for catastrophic event management.</p>
+          <p class="text-2xl font-black tracking-tighter text-[#fac9c8] m-0">1-800-GUI-PROT</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>

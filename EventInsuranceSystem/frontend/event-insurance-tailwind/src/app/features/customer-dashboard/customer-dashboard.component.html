@@ -1,0 +1,1120 @@
+﻿<div class="flex min-h-screen bg-[#f8fafc] font-sans">
+  <!-- Mobile Menu Backdrop -->
+  @if (isSidebarOpen()) {
+  <div (click)="toggleSidebar()"
+    class="lg:hidden fixed inset-0 bg-[#001a35]/60 z-[1001] backdrop-blur-sm animate-fade-in"></div>
+  }
+
+  <!-- Mobile Branding & Toggle -->
+  <div
+    class="lg:hidden fixed top-0 left-0 right-0 h-[70px] bg-[#001a35] flex items-center justify-between px-4 md:px-5 z-[1000] border-b border-white/5">
+    <img src="logo.svg" class="h-8 brightness-0 invert" alt="Logo">
+    <button (click)="toggleSidebar()" class="text-white p-2 hover:bg-white/10 rounded-lg transition-colors">
+      <i class="fa-solid" [class]="isSidebarOpen() ? 'fa-xmark text-2xl' : 'fa-bars-staggered text-xl'"></i>
+    </button>
+  </div>
+
+  <!-- Sidebar -->
+  <aside
+    class="fixed top-0 left-0 bottom-0 w-[240px] bg-[#001a35] text-white overflow-y-auto transition-transform duration-300 z-[1002] shadow-[20px_0_50px_rgba(0,0,0,0.1)] font-sans flex flex-col"
+    [class.translate-x-0]="isSidebarOpen()" [class.-translate-x-full]="!isSidebarOpen()"
+    [class.lg:translate-x-0]="true">
+
+    <div class="p-8 pb-12 border-b border-white/5">
+      <img src="logo.svg" alt="The Hartford" class="h-10 mb-5 md:mb-6 cursor-pointer object-contain brightness-0 invert"
+        routerLink="/">
+
+      <div class="flex items-center gap-4 group">
+        <div
+          class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#e2231a] to-[#b91c1c] flex items-center justify-center text-xl font-black shadow-lg shadow-[#e2231a]/20 group-hover:scale-110 transition-transform">
+          {{ userName.charAt(0).toUpperCase() }}
+        </div>
+        <div class="overflow-hidden">
+          <p class="text-[0.7rem] font-black text-[#fac9c8] uppercase tracking-[2px] m-0 mb-1">Standard Customer</p>
+          <p class="text-white font-bold text-[1rem] truncate m-0">{{ userName }}</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="px-6 py-4 space-y-2 flex-grow">
+      <button (click)="setTab('overview')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'overview' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-gauge-high w-6 text-center"></i> Overview
+      </button>
+
+      <button (click)="setTab('new-request')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'new-request' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-file-signature w-6 text-center"></i> New Quote
+      </button>
+
+      <button (click)="setTab('my-requests')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'my-requests' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-folder-open w-6 text-center"></i> My Requests
+      </button>
+
+      <button (click)="setTab('applications')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'applications' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-file-contract w-6 text-center"></i> Applications
+      </button>
+
+      <button (click)="setTab('policies')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'policies' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-shield-halved w-6 text-center"></i> Policies
+      </button>
+
+      <button (click)="setTab('claims')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'claims' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-hand-holding-dollar w-6 text-center"></i> Claims
+      </button>
+
+      <button (click)="setTab('analytics')"
+        class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+        [class]="tab() === 'analytics' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+        <i class="fa-solid fa-chart-line w-6 text-center"></i> Intelligence
+      </button>
+    </nav>
+
+    <div class="p-6 mt-auto">
+      <a routerLink="/"
+        class="flex items-center gap-4 px-4 md:px-5 py-4 rounded-xl text-[0.9rem] font-bold text-white/50 hover:text-white hover:bg-white/5 no-underline transition-all group">
+        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> Return to Site
+      </a>
+    </div>
+  </aside>
+
+  <!-- Primary Content Area -->
+  <main
+    class="flex-1 lg:ml-[240px] bg-[#f8fafc] min-h-screen transition-all duration-300 pt-[70px] lg:pt-0 p-4 sm:p-4 lg:p-8">
+    <header
+      class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-4 md:mb-6 bg-white p-6 sm:p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-slate-100 gap-3 md:gap-4">
+      <div class="flex items-center gap-3 md:gap-4">
+        <div
+          class="w-12 h-12 sm:w-16 sm:h-16 bg-[#004b87] rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-blue-50 shrink-0">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-xl md:text-2xl text-[#001a35] font-black m-0 font-heading leading-tight">
+            @if (tab() === 'overview') { Relationship Overview }
+            @if (tab() === 'new-request') { Risk Identification }
+            @if (tab() === 'my-requests') { Request History }
+            @if (tab() === 'applications') { Application Ledger }
+            @if (tab() === 'policies') { Digital Policies }
+            @if (tab() === 'claims') { Claims Center }
+            @if (tab() === 'analytics') { Financial Intelligence }
+          </h1>
+          <div class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+            <p class="text-[0.7rem] text-slate-400 font-black m-0 uppercase tracking-[2px] mt-1">Status: <span
+                class="text-emerald-500">Authenticated Member</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 bg-slate-50 px-4 md:px-5 py-3 rounded-2xl border border-slate-100">
+        <i class="fa-solid fa-shield-halved text-[#e2231a]"></i>
+        <span class="text-[#001a35] font-black text-[0.85rem] uppercase tracking-widest">{{ userName }}</span>
+      </div>
+    </header>
+
+    <!-- Global Information Filter -->
+    @if (tab() !== 'analytics' && tab() !== 'overview' && tab() !== 'new-request') {
+    <div
+      class="mb-8 flex flex-wrap items-center gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] animate-fade-in-down">
+      <div class="relative flex-1 min-w-[280px]">
+        <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" [(ngModel)]="filterTerm" placeholder="Search my records (ID, Quote, Type)..."
+          class="w-full pl-14 pr-6 py-4 bg-slate-50 border-none rounded-2xl text-[0.9rem] font-medium focus:ring-4 focus:ring-[#004b87]/5 outline-none transition-all placeholder:text-slate-300">
+      </div>
+      <div class="flex items-center gap-4 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">From</label>
+        <input type="date" [(ngModel)]="startDt"
+          class="bg-transparent border-none text-[0.85rem] font-bold text-[#001a35] outline-none">
+      </div>
+      <div class="flex items-center gap-4 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">To</label>
+        <input type="date" [(ngModel)]="endDt"
+          class="bg-transparent border-none text-[0.85rem] font-bold text-[#001a35] outline-none">
+      </div>
+      <button (click)="resetFilters()"
+        class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#f8fafc] text-white/40 hover:text-[#e2231a] hover:bg-red-50 transition-all border-none cursor-pointer">
+        <i class="fa-solid fa-rotate-left"></i>
+      </button>
+    </div>
+    }
+
+
+    <!-- OVERVIEW -->
+    @if (tab() === 'overview') {
+    <div class="animate-fade-in">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-3 md:gap-4 mb-6 md:mb-4 md:mb-6">
+        <div
+          class="bg-white p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
+          <div class="flex items-center gap-3 md:gap-4">
+            <div
+              class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-[#004b87] text-xl md:text-2xl group-hover:bg-[#004b87] group-hover:text-white transition-all">
+              <i class="fa-solid fa-inbox"></i>
+            </div>
+            <div>
+              <div class="text-xl md:text-2xl font-black text-[#001a35] leading-none mb-2">{{ myRequests.length }}</div>
+              <div class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Active Requests</div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
+          <div class="flex items-center gap-3 md:gap-4">
+            <div
+              class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-emerald-600 text-xl md:text-2xl group-hover:bg-emerald-600 group-hover:text-white transition-all">
+              <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <div>
+              <div class="text-xl md:text-2xl font-black text-[#001a35] leading-none mb-2">{{ policies.length }}</div>
+              <div class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Active Policies</div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group">
+          <div class="flex items-center gap-3 md:gap-4">
+            <div
+              class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-[#e2231a] text-xl md:text-2xl group-hover:bg-[#e2231a] group-hover:text-white transition-all">
+              <i class="fa-solid fa-clipboard-list"></i>
+            </div>
+            <div>
+              <div class="text-xl md:text-2xl font-black text-[#001a35] leading-none mb-2">{{ claims.length }}</div>
+              <div class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Total Claims</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-end mb-4 md:mb-6">
+        <div>
+          <h2 class="text-[#001329] text-2xl font-black font-heading mb-1">Recent Claims</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Live settlement status</p>
+        </div>
+      </div>
+
+      @if (claims.length === 0) {
+      <div class="bg-white rounded-2xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[200px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/surreal-hourglass.svg" alt="All Clear" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem]">Historical records clear for the
+          current term</p>
+      </div>
+      }
+
+      @if (claims.length > 0) {
+      <div
+        class="bg-white rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 overflow-x-auto">
+        <table class="w-full text-left min-w-[700px]">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Identifier</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Quantum</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Incident Context
+              </th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Adjudication</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (c of claims.slice(0,4); track c.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">#{{c.id}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[1rem] font-bold text-[#e2231a]">₹{{c.claimAmount | number}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.85rem] font-medium text-slate-500 max-w-[300px] truncate">
+                {{c.description}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <span class="px-4 py-1.5 rounded-lg text-[0.65rem] font-black uppercase tracking-widest border"
+                  [class]="c.status==='Approved'||c.status==='Settled'?'bg-emerald-50 text-emerald-700 border-emerald-100':c.status==='Rejected'?'bg-red-50 text-red-700 border-red-100':'bg-amber-50 text-amber-700 border-amber-100'">{{c.status}}</span>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- NEW REQUEST -->
+    @if (tab() === 'new-request') {
+    <div class="animate-fade-in max-w-4xl">
+      <div
+        class="bg-white rounded-3xl p-6 sm:p-5 md:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-slate-100">
+        <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-4 md:mb-6">
+          <div
+            class="w-12 h-12 bg-[#e2231a] rounded-2xl flex items-center justify-center text-white text-2xl shadow-xl shadow-red-100">
+            <i class="fa-solid fa-file-circle-plus"></i>
+          </div>
+          <div>
+            <h2 class="text-[#001a35] text-xl md:text-2xl font-black font-heading m-0">Risk Specification</h2>
+            <p class="text-slate-400 font-bold uppercase tracking-[2px] text-[0.7rem] mt-1">Initialize protection
+              request</p>
+          </div>
+        </div>
+
+        <form (ngSubmit)="submitRequest()"
+          class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 sm:gap-4 md:gap-3 md:gap-4">
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Event
+              Classification</label>
+            <select [(ngModel)]="request.eventType" name="eventType"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+              <option value="">Select event type...</option>
+              <option value="Wedding">Wedding</option>
+              <option value="Concert">Concert</option>
+              <option value="Conference">Conference</option>
+              <option value="Sports Event">Sports Event</option>
+              <option value="Festival">Festival</option>
+              <option value="Corporate Event">Corporate Event</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Deployment
+              Date</label>
+            <input [(ngModel)]="request.eventDate" name="eventDate" type="date"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Duration
+              (Days)</label>
+            <input [(ngModel)]="request.eventDuration" name="eventDuration" type="number" placeholder="1"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+          </div>
+
+          <div class="space-y-2 relative">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Geospatial
+              Location</label>
+            <div class="relative group">
+              <i
+                class="fa-solid fa-location-crosshairs absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+              <input [(ngModel)]="request.eventLocation" name="eventLocation" type="text" placeholder="Search locale..."
+                autocomplete="off" (input)="onLocationInput($event)"
+                class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+            </div>
+            @if (locationResults.length > 0) {
+            <div
+              class="absolute top-[100%] left-0 right-0 bg-white border border-slate-100 rounded-2xl shadow-2xl z-[100] max-h-[250px] overflow-y-auto mt-2 overflow-hidden">
+              @for (loc of locationResults; track loc.display_name) {
+              <div
+                class="px-4 md:px-5 py-4 cursor-pointer text-[0.85rem] text-slate-600 border-b border-slate-50 transition-all hover:bg-slate-50 hover:text-[#004b87] last:border-b-0 flex items-center gap-3"
+                (click)="selectLocation(loc)">
+                <i class="fa-solid fa-location-dot text-[#004b87]/40"></i>
+                <span class="truncate">{{ loc.display_name }}</span>
+              </div>
+              }
+            </div>
+            }
+          </div>
+
+          <!-- Robust Mapping Engine -->
+          <div class="md:col-span-2 group/map relative" id="requestMapContainer">
+            <div #mapElement id="requestMap"
+              class="h-[300px] w-full bg-slate-100 rounded-2xl border-4 border-white shadow-2xl relative overflow-hidden flex flex-col items-center justify-center transition-all duration-700 bg-[radial-gradient(circle_at_center,_#f8fafc_0%,_#f1f5f9_100%)] z-[1]">
+              <i
+                class="fa-solid fa-map-location-dot text-2xl md:text-xl md:text-2xl text-[#004b87]/30 mb-4 animate-bounce"></i>
+              <p class="text-[#004b87] font-black text-[0.65rem] uppercase tracking-[3px] opacity-40">System Map Engine
+                v1.0.5</p>
+            </div>
+            <!-- Overlay to prevent accidental clicks while moving -->
+            <div
+              class="absolute inset-x-8 bottom-8 z-10 opacity-0 group-hover/map:opacity-100 transition-opacity pointer-events-none bg-white/80 backdrop-blur-md px-4 md:px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3">
+              <i class="fa-solid fa-mouse-pointer text-[#004b87]"></i>
+              <span class="text-[0.7rem] font-bold text-[#001a35]">Click map to set geospatial coordinate</span>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Expected
+              Attendance</label>
+            <input [(ngModel)]="request.estimatedAttendees" name="estimatedAttendees" type="number" placeholder="500"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Event Valuation
+              (₹)</label>
+            <input [(ngModel)]="request.eventBudget" name="eventBudget" type="number" placeholder="500,000"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Requested
+              Coverage (₹)</label>
+            <input [(ngModel)]="request.coverageRequested" name="coverageRequested" type="number"
+              placeholder="1,000,000"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+          </div>
+
+          <div class="space-y-2 md:col-span-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Risk Factors &
+              Context</label>
+            <textarea [(ngModel)]="request.riskFactors" name="riskFactors" rows="4"
+              placeholder="Detail specific risk vectors (e.g. fireworks, heights, hazardous equipment)..."
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 min-h-[140px]"></textarea>
+          </div>
+
+          <div
+            class="md:col-span-2 pt-6 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <p class="text-slate-400 text-[0.7rem] font-bold uppercase tracking-widest max-w-[200px]">Securely
+                encrypted risk transmission</p>
+            </div>
+            <button type="submit" [disabled]="submitting()"
+              class="w-full sm:w-auto bg-[#001a35] text-white px-10 sm:px-6 md:px-8 py-4 sm:py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-[#001a35]/20 hover:shadow-[#001a35]/40 hover:-translate-y-1 transition-all border-none cursor-pointer disabled:opacity-50">
+              {{ submitting() ? 'PROCESSING...' : 'DISPATCH REQUEST' }}
+            </button>
+          </div>
+        </form>
+
+        @if (requestMsg()) {
+        <div class="mt-4 md:mt-6 p-6 rounded-2xl flex items-center gap-4 animate-scale-in"
+          [class]="requestErr() ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+          <i class="fa-solid" [class]="requestErr() ? 'fa-circle-exclamation' : 'fa-circle-check'"></i>
+          <p class="text-[0.85rem] font-black m-0 uppercase tracking-widest">{{ requestMsg() }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- MY REQUESTS -->
+    @if (tab() === 'my-requests') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Risk Portfolio</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Ongoing coverage evaluations</p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm"
+          (click)="loadMyRequests()">
+          <i class="fa-solid fa-rotate-right"></i> REFRESH PORTFOLIO
+        </button>
+      </div>
+
+      @if (myRequests.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[180px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/creative-process.svg" alt="No Requests" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem] mb-4 md:mb-6">No active risk
+          profiles found
+          in your portfolio</p>
+        <button (click)="setTab('new-request')"
+          class="bg-[#001a35] text-white px-10 py-5 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest border-none cursor-pointer hover:bg-[#e2231a] transition-all shadow-xl">INITIALIZE
+          FIRST REQUEST</button>
+      </div>
+      }
+
+      <div class="mb-6">
+        <div class="relative group">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+          <input [(ngModel)]="filterTerm" type="text" placeholder="Filter requests by ID, type, or status..."
+            class="w-full pl-12 pr-6 py-4 bg-white border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 shadow-sm">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-3 md:gap-4">
+        @for (req of filterList(myRequests); track req.id) {
+        <div
+          class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl group flex flex-col">
+          <div class="h-2 bg-gradient-to-r from-[#004b87] to-[#001a35]"></div>
+
+          <div class="p-8 flex-1">
+            <div class="flex justify-between items-start mb-4 md:mb-6">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#001a35] text-xl font-black font-heading border border-slate-100 italic">
+                  {{ (req.eventType || 'E')[0] }}
+                </div>
+                <div>
+                  <h3 class="text-[#001329] text-lg font-black font-heading m-0">{{req.eventType}}</h3>
+                  <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-widest mt-1">Ref: #{{req.id}}</p>
+                </div>
+              </div>
+              <span class="px-3 py-1.5 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border"
+                [class]="req.status==='Submitted'?'bg-amber-50 text-amber-700 border-amber-100':req.status==='AgentAssigned'||req.status==='PolicySuggested'?'bg-emerald-50 text-emerald-700 border-emerald-100':'bg-slate-50 text-slate-500 border-slate-200'">{{req.status}}</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4 md:mb-6">
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <p class="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 mb-1">Target Coverage</p>
+                <p class="text-[#001a35] font-black text-sm m-0">₹{{req.coverageRequested | number}}</p>
+              </div>
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <p class="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 mb-1">Event Locale</p>
+                <p class="text-[#001a35] font-black text-sm m-0 truncate">{{req.eventLocation || 'N/A'}}</p>
+              </div>
+            </div>
+
+            <!-- Suggestions -->
+            @if (req._suggestions && req._suggestions.length > 0) {
+            <div class="mt-4 md:mt-6 pt-8 border-t border-slate-100">
+              <h4 class="text-[#001329] text-[0.7rem] font-black uppercase tracking-[2px] mb-6 flex items-center gap-3">
+                <span class="w-8 h-px bg-slate-200"></span> Expert Recommendations <span
+                  class="w-8 h-px bg-slate-200"></span>
+              </h4>
+              <div class="space-y-4">
+                @for (s of req._suggestions; track s.id) {
+                <div
+                  class="bg-slate-50/50 rounded-xl p-6 border border-slate-100 transition-all hover:bg-white hover:shadow-lg ">
+                  <div class="flex justify-between items-start mb-4">
+                    <div class="flex-1">
+                      <p class="text-[#001a35] font-black text-sm mb-1 uppercase tracking-tight">{{s.policyName}}</p>
+                      <p class="text-slate-500 text-[0.75rem] font-medium leading-relaxed">{{s.policyDescription}}</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap items-center justify-between gap-4 mt-6 pt-6 border-t border-slate-100/50">
+                    <div class="flex items-center gap-3 md:gap-4">
+                      <div>
+                        <p class="text-[0.55rem] font-black uppercase tracking-widest text-slate-400 mb-0.5">Premium</p>
+                        <p class="text-[#e2231a] font-black text-sm m-0">₹{{s.suggestedPremium | number}}</p>
+                      </div>
+                      <div>
+                        <p class="text-[0.55rem] font-black uppercase tracking-widest text-slate-400 mb-0.5">Limit</p>
+                        <p class="text-[#004b87] font-black text-sm m-0">₹{{s.coverageAmount | number}}</p>
+                      </div>
+                    </div>
+                    @if (s.status === 'Pending') {
+                    <button
+                      class="bg-[#001a35] text-white px-4 md:px-5 py-3 rounded-xl text-[0.65rem] font-black uppercase tracking-widest border-none cursor-pointer transition-all hover:bg-[#e2231a] active:scale-95 shadow-lg shadow-slate-200"
+                      [disabled]="submitting()" (click)="selectSuggestion(s, req)">
+                      BIND POLICY
+                    </button>
+                    }
+                    @else {
+                    <span
+                      class="text-[0.6rem] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
+                      <i class="fa-solid fa-circle-check"></i> SELECTED
+                    </span>
+                    }
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+            }
+
+            @if (req.status === 'AgentAssigned' && (!req._suggestions || req._suggestions.length === 0)) {
+            <div class="mt-4 md:mt-6 p-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
+              <i class="fa-solid fa-user-tie text-slate-300 text-2xl mb-3 block"></i>
+              <p class="text-slate-400 text-[0.7rem] font-bold uppercase tracking-widest m-0 leading-relaxed">Agent
+                Assigned. <br>Analyzing risk vectors for optimal pricing...</p>
+            </div>
+            }
+            @if (req.status === 'Submitted') {
+            <div class="mt-4 md:mt-6 p-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
+              <i class="fa-solid fa-hourglass-half text-slate-300 text-2xl mb-3 block"></i>
+              <p class="text-slate-400 text-[0.7rem] font-bold uppercase tracking-widest m-0 leading-relaxed">Undergoing
+                Triage. <br>Our underwriting team will contact you shortly.</p>
+            </div>
+            }
+
+            @if (req._msg) {
+            <div class="mt-6 p-4 rounded-xl text-[0.7rem] font-black uppercase tracking-widest animate-fade-in"
+              [class]="req._err ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+              {{req._msg}}
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- APPLICATIONS -->
+    @if (tab() === 'applications') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Underwriting Queue</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Documentation & validation cycle
+          </p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm"
+          (click)="loadMyApplications()">
+          <i class="fa-solid fa-sync"></i> SYNC QUEUE
+        </button>
+      </div>
+
+      @if (myApplications.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[180px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/creative-process.svg" alt="No Apps" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem]">Underwriting queue clear. No
+          active applications detected.</p>
+      </div>
+      }
+
+      <div class="mb-6">
+        <div class="relative group">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+          <input [(ngModel)]="filterTerm" type="text" placeholder="Filter applications by ID, product, or status..."
+            class="w-full pl-12 pr-6 py-4 bg-white border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 shadow-sm">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-3 md:gap-4">
+        <ng-container *ngFor="let app of filterList(myApplications)">
+          <div *ngIf="!hasActivePolicy(app.id)"
+            class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl group flex flex-col">
+            <div class="h-2 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+
+            <div class="p-8 flex-1">
+              <div class="flex justify-between items-start mb-4 md:mb-6">
+                <div>
+                  <h3 class="text-[#001329] text-lg font-black font-heading m-0">Application #{{app.id}}</h3>
+                  <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-widest mt-1">Validation ID:
+                    ARC-{{app.id}}</p>
+                </div>
+                <span class="px-3 py-1.5 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border"
+                  [ngClass]="{
+                    'bg-amber-50 text-amber-700 border-amber-100': app.status === 'PendingValidation' || app.status === 'UnderReview',
+                    'bg-emerald-50 text-emerald-700 border-emerald-100': app.status === 'Approved' || app.status === 'AgentApproved' || app.status === 'Validated',
+                    'bg-red-50 text-red-700 border-red-100': app.status === 'Rejected'
+                  }">{{app.status}}</span>
+              </div>
+
+              <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 mb-4 md:mb-6 space-y-4">
+                <div class="flex justify-between items-center text-[0.8rem]">
+                  <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Assigned
+                    Product</span>
+                  <span class="text-[#001a35] font-black uppercase tracking-tight">{{app.policyProduct?.name ||
+                    'Standard Cover'}}</span>
+                </div>
+                <div class="flex justify-between items-center text-[0.8rem]">
+                  <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Risk Analytics
+                    Index</span>
+                  <span class="text-[#001a35] font-black">{{app.riskScore}} / 100 <span
+                      class="text-slate-300 ml-1 font-medium">({{app.riskCategory}})</span></span>
+                </div>
+              </div>
+
+              @if (app.status === 'Approved' || app.status === 'Validated') {
+              <div
+                class="bg-emerald-50 border-2 border-dashed border-emerald-200 p-6 rounded-xl text-center mb-4 md:mb-6">
+                <i class="fa-solid fa-badge-check text-emerald-500 text-xl md:text-2xl mb-3 block"></i>
+                <h4 class="text-emerald-800 font-black text-sm uppercase tracking-widest mb-2">Final Clearance Granted
+                </h4>
+                <p class="text-emerald-600 text-[0.75rem] font-medium leading-relaxed m-0">Administrator is generating
+                  your digital policy ledger. Completion expected in &lt; 4 hours.</p>
+              </div>
+              }
+
+              <!-- Document Manifest -->
+              @if (app.status === 'PendingValidation') {
+              <div class="mt-4 md:mt-6 pt-8 border-t border-slate-100">
+                <h4
+                  class="text-[#001329] text-[0.7rem] font-black uppercase tracking-[2px] mb-6 flex items-center gap-3">
+                  <span class="w-8 h-px bg-slate-200"></span> Required Artifacts <span
+                    class="w-8 h-px bg-slate-200"></span>
+                </h4>
+
+                <div class="bg-slate-50 rounded-[28px] p-6 md:p-8 space-y-6">
+                  <div class="grid grid-cols-1 gap-3 md:gap-4">
+                    <div class="space-y-2">
+                      <label
+                        class="block text-[0.6rem] font-black text-slate-400 uppercase tracking-widest ml-1">Artifact
+                        Type</label>
+                      <select [(ngModel)]="app._docType"
+                        class="w-full px-4 md:px-5 py-4 bg-white border-2 border-transparent rounded-2xl text-[0.85rem] font-bold outline-none transition-all focus:border-[#004b87]/20">
+                        <option value="">Select artifact...</option>
+                        <option>Identity Verification</option>
+                        <option>Municipal Permit</option>
+                        <option>Vendor Agreement</option>
+                        <option>Financial Statement</option>
+                        <option>Safety Protocol</option>
+                      </select>
+                    </div>
+
+                    <div class="space-y-2">
+                      <label
+                        class="block text-[0.6rem] font-black text-slate-400 uppercase tracking-widest ml-1">Biological/Digital
+                        File</label>
+                      <div class="relative group">
+                        <input type="file" (change)="onFileSelected($event, app)"
+                          class="w-full px-4 md:px-5 py-4 bg-white border-2 border-dashed border-slate-200 rounded-2xl text-[0.85rem] font-bold outline-none transition-all focus:border-[#004b87]/20 file:hidden cursor-pointer hover:bg-slate-100/50"
+                          accept=".pdf,.png,.jpg,.jpeg" />
+                        <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">
+                          <i class="fa-solid fa-paperclip"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    class="w-full bg-[#001a35] text-white py-4 rounded-xl font-black text-[0.7rem] uppercase tracking-widest border-none cursor-pointer transition-all hover:bg-[#e2231a] active:scale-95 shadow-lg shadow-slate-200 disabled:opacity-50"
+                    [disabled]="submitting() || !app._docType || !app._docFile" (click)="uploadDocument(app)">
+                    <i class="fa-solid fa-cloud-arrow-up mr-2"></i> UPLOAD & SYNC ARTIFACT
+                  </button>
+                </div>
+              </div>
+              }
+
+              <!-- Active Manifest -->
+              @if (app._docs && app._docs.length > 0) {
+              <div class="mt-4 md:mt-6 pt-8 border-t border-slate-100">
+                <h4 class="text-[#001329] text-[0.7rem] font-black uppercase tracking-[2px] mb-4">Synchronized Artifacts
+                </h4>
+                <div class="space-y-2">
+                  @for (d of app._docs; track d.id) {
+                  <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="flex items-center gap-3">
+                      <i class="fa-solid fa-file-shield text-[#004b87]/40 text-lg"></i>
+                      <div class="max-w-[150px] md:max-w-none">
+                        <p class="text-[#001a35] font-black text-[0.8rem] m-0 truncate">{{d.fileName}}</p>
+                        <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-widest">{{d.documentType}}
+                        </p>
+                      </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-lg text-[0.55rem] font-black uppercase tracking-widest border"
+                      [ngClass]="{
+                        'bg-emerald-50 text-emerald-700 border-emerald-200': d.validationStatus === 'Valid',
+                        'bg-amber-50 text-amber-700 border-amber-200': d.validationStatus === 'Pending',
+                        'bg-red-50 text-red-700 border-red-200': d.validationStatus === 'Invalid'
+                      }">{{d.validationStatus}}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+              }
+
+              @if (app._msg) {
+              <div
+                class="mt-6 p-4 rounded-xl text-[0.7rem] font-black uppercase tracking-widest animate-fade-in text-center"
+                [class]="app._err ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+                {{app._msg}}
+              </div>
+              }
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    }
+
+    <!-- ==================== MY POLICIES ==================== -->
+    @if (tab() === 'policies') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Active Coverage</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Enforced digital policies</p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm"
+          (click)="loadPolicies()">
+          <i class="fa-solid fa-sync"></i> REFRESH REGISTRY
+        </button>
+      </div>
+
+      @if (policies.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[180px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/surreal-hourglass.svg" alt="No Policies" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem]">Registry empty. No active digital
+          ledger found.</p>
+      </div>
+      }
+
+      <div class="mb-6">
+        <div class="relative group">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+          <input [(ngModel)]="filterTerm" type="text" placeholder="Filter policies by ID, product, or status..."
+            class="w-full pl-12 pr-6 py-4 bg-white border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 shadow-sm">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-3 md:gap-4">
+        @for (p of filterList(policies); track p.id) {
+        <div
+          class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl group flex flex-col">
+          <div class="h-2 bg-[#001a35] group-hover:bg-[#e2231a] transition-colors"></div>
+
+          <div class="p-8 flex-1 flex flex-col">
+            <div class="flex justify-between items-start mb-6">
+              <div class="w-12 h-12 rounded-xl bg-[#001a35] flex items-center justify-center text-white text-xl">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <span
+                class="px-3 py-1.5 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border bg-emerald-50 text-emerald-700 border-emerald-100 italic">{{p.status}}</span>
+            </div>
+
+            <h3 class="text-[#001329] text-lg font-black font-heading mb-1">{{p.policyProductName || 'Universal
+              Protection'}}</h3>
+            <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-widest mb-6">Ref: {{p.policyNumber}}
+            </p>
+
+            <div class="space-y-4 mb-4 md:mb-6">
+              <div class="flex justify-between items-center text-[0.8rem]">
+                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Gross Coverage</span>
+                <span class="text-[#001a35] font-black">₹{{p.coverageAmount | number}}</span>
+              </div>
+              <div class="flex justify-between items-center text-[0.8rem]">
+                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Annual Premium</span>
+                <span class="text-[#001a35] font-black">₹{{p.premiumAmount | number}}</span>
+              </div>
+              <div class="flex justify-between items-center text-[0.8rem]">
+                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Lifecycle Term</span>
+                <span class="text-[#001a35] font-black">{{p.startDate | date:'mediumDate'}} — {{p.endDate |
+                  date:'mediumDate'}}</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-auto">
+              <button
+                class="bg-slate-50 text-[#001a35] py-4 rounded-xl font-black text-[0.65rem] uppercase tracking-widest border border-slate-200 cursor-pointer transition-all hover:bg-[#001a35] hover:text-white hover:border-[#001a35]"
+                (click)="openPayment(p)">
+                PAYMENT
+              </button>
+              <button
+                class="bg-[#e2231a] text-white py-4 rounded-xl font-black text-[0.65rem] uppercase tracking-widest border-none cursor-pointer transition-all hover:bg-red-700 shadow-lg shadow-red-100"
+                (click)="openClaimForPolicy(p)">
+                RAISE CLAIM
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- ==================== PAYMENTS ==================== -->
+    @if (tab() === 'payments') {
+    <div class="animate-fade-in">
+      <div class="flex justify-between items-center mb-5 md:mb-6">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Payment Ledger</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Financial synchronization</p>
+        </div>
+      </div>
+
+      @if (payments.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[180px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/statistics.svg" alt="No Payments" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem]">Financial history clear. No
+          transaction records identified.</p>
+      </div>
+      }
+
+      @if (payments.length > 0) {
+      <div class="mb-6">
+        <div class="relative group">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#004b87] transition-colors"></i>
+          <input [(ngModel)]="filterTerm" type="text" placeholder="Filter payments by ID, policy, or status..."
+            class="w-full pl-12 pr-6 py-4 bg-white border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 shadow-sm">
+        </div>
+      </div>
+      <div
+        class="bg-white rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 overflow-x-auto">
+        <table class="w-full text-left min-w-[800px]">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">ID
+              </th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Linked Asset</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Quantum</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Timestamp</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (p of filterList(payments); track p.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">#{{p.id}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.85rem] font-bold text-slate-600">Policy #{{p.policyId}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">₹{{p.amount | number}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.85rem] font-medium text-slate-500">{{p.paymentDate |
+                date:'mediumDate'}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <span
+                  class="px-4 py-1.5 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border bg-emerald-50 text-emerald-700 border-emerald-100">{{p.status}}</span>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- CLAIMS -->
+    @if (tab() === 'claims') {
+    <div class="animate-fade-in">
+      @if (claims.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[180px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/surreal-hourglass.svg" alt="No Claims" class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.75rem]">Claims history clear. Your
+          portfolio shows optimal stability.</p>
+      </div>
+      }
+
+      @if (claims.length > 0) {
+      <div
+        class="bg-white rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 overflow-x-auto">
+        <table class="w-full text-left min-w-[700px]">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">ID
+              </th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Asset Policy</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Quantum</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (c of claims; track c.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">#{{c.id}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.85rem] font-bold text-slate-600">Policy #{{c.policyId}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">₹{{c.claimAmount | number}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <span class="px-4 py-1.5 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border"
+                  [class]="c.status==='Approved'||c.status==='Settled'?'bg-emerald-50 text-emerald-700 border-emerald-100':c.status==='Rejected'?'bg-red-50 text-red-700 border-red-100':'bg-amber-50 text-amber-700 border-amber-100'">{{c.status}}</span>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- RAISE CLAIM -->
+    @if (tab() === 'raise-claim') {
+    <div class="animate-fade-in max-w-4xl">
+      <div class="bg-white rounded-3xl p-5 md:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-slate-100">
+        <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-4 md:mb-6">
+          <div
+            class="w-12 h-12 bg-[#e2231a] rounded-2xl flex items-center justify-center text-white text-2xl shadow-xl shadow-red-100">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <h2 class="text-[#001a35] text-xl md:text-2xl font-black font-heading m-0 text-left">Indemnity Activation
+            </h2>
+            <p class="text-slate-400 font-bold uppercase tracking-[2px] text-[0.7rem] mt-1 text-left">Initiate loss
+              event
+              registry</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3 md:gap-4 mb-6 md:mb-4 md:mb-6 text-left">
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Asset Policy
+              Selection</label>
+            <select [(ngModel)]="claimForm.policyId"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+              <option [ngValue]="null" disabled>Select master policy...</option>
+              @for (p of policies; track p.id) {
+              <option [ngValue]="p.id">{{ p.policyNumber || 'Policy #'+p.id }} — ₹{{ p.coverageAmount | number }}
+              </option>
+              }
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1 text-left">Claim
+              Quantum
+              (₹)</label>
+            <input [(ngModel)]="claimForm.claimAmount" type="number" placeholder="50,000"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20">
+          </div>
+
+          <div class="space-y-2 md:col-span-2 text-left">
+            <label
+              class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1 text-left">Incident
+              Narrative
+              & Context</label>
+            <textarea [(ngModel)]="claimForm.description" rows="4"
+              placeholder="Provide a detailed log of the trigger event..."
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 min-h-[140px]"></textarea>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4 pt-6 border-t border-slate-50">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
+              <i class="fa-solid fa-fingerprint"></i>
+            </div>
+            <p class="text-slate-400 text-[0.7rem] font-bold uppercase tracking-widest max-w-[200px] text-left">Claims
+              are reviewed
+              by AI for rapid adjudication</p>
+          </div>
+          <button [disabled]="submitting() || !claimForm.policyId || !claimForm.claimAmount"
+            class="w-full sm:w-auto bg-[#001a35] text-white px-6 md:px-8 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-[#001a35]/20 hover:shadow-[#001a35]/40 hover:-translate-y-1 transition-all border-none cursor-pointer disabled:opacity-50"
+            (click)="raiseClaim()">
+            {{ submitting() ? 'DISPATCHING...' : 'INITIALIZE CLAIM' }}
+          </button>
+        </div>
+
+        @if (claimMsg()) {
+        <div class="mt-4 md:mt-6 p-6 rounded-2xl flex items-center gap-4 animate-scale-in"
+          [class]="claimErr() ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+          <i class="fa-solid" [class]="claimErr() ? 'fa-triangle-exclamation' : 'fa-circle-check'"></i>
+          <p class="text-[0.85rem] font-black m-0 uppercase tracking-widest">{{ claimMsg() }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- ANALYTICS -->
+    @if (tab() === 'analytics') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-xl md:text-2xl font-black font-heading mb-1">Exposure Insights</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">Predictive protective analytics
+          </p>
+        </div>
+        <div class="flex items-center gap-4 bg-white px-4 md:px-5 py-2 rounded-2xl border border-slate-100 shadow-sm">
+          <label class="font-black text-slate-400 text-[0.65rem] uppercase tracking-widest">Spectrum:</label>
+          <select [(ngModel)]="custSelectedChart" (ngModelChange)="onCustChartChange()"
+            class="py-2 border-none font-black text-[#001a35] text-[0.8rem] outline-none bg-transparent cursor-pointer">
+            <option value="premiumVsCoverage">Premium Density</option>
+            <option value="claimsByStatus">Settlement Index</option>
+            <option value="monthlyPayments">Cashflow Cycle</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-3xl p-5 md:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+        <div
+          class="absolute -right-20 -bottom-20 w-80 h-80 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity pointer-events-none">
+          <img src="https://illustrations.popsy.co/blue/statistics.svg" alt="Decor" class="w-full h-auto">
+        </div>
+        <h4
+          class="text-[#001329] text-[0.75rem] font-black uppercase tracking-[2px] mb-4 md:mb-6 bg-slate-50 inline-block px-4 md:px-5 py-2 rounded-full relative z-10">
+          {{ custChartTitles[custSelectedChart] }}</h4>
+        <div
+          class="relative h-[300px] w-full bg-slate-50/30 rounded-2xl p-8 border border-slate-100/50 z-10 backdrop-blur-sm">
+          <canvas id="custAnalyticsCanvas" class="w-full h-full"></canvas>
+        </div>
+        @if (custChartSummary) {
+        <div
+          class="mt-4 md:mt-6 p-8 bg-[#001a35]/[0.02] rounded-2xl border-l-8 border-[#001a35] flex items-start gap-4 relative z-10">
+          <div class="w-10 h-10 rounded-xl bg-[#001a35] flex items-center justify-center text-white shrink-0">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <p class="text-[#001a35] text-[0.9rem] font-semibold leading-relaxed m-0 italic">{{ custChartSummary }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- PAYMENT MODAL -->
+    @if (payingPolicy) {
+    <div
+      class="fixed inset-0 bg-[#001a35]/60 flex items-center justify-center z-[1001] backdrop-blur-sm animate-fade-in"
+      (click)="payingPolicy = null">
+      <div
+        class="bg-white rounded-3xl p-10 md:p-14 w-[500px] shadow-[0_40px_100px_rgba(0,0,0,0.2)] border border-white/20 animate-scale-in relative overflow-hidden"
+        (click)="$event.stopPropagation()">
+
+        <div class="absolute top-0 right-0 w-32 h-32 bg-[#e2231a] opacity-[0.03] rounded-full -mr-10 -mt-5 md:mt-6">
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4 mb-5 md:mb-6 text-left">
+          <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-credit-card"></i>
+          </div>
+          <div>
+            <h3 class="text-[#001a35] text-2xl font-black font-heading m-0 text-left">Fulfillment</h3>
+            <p class="text-slate-400 font-bold uppercase tracking-[2px] text-[0.7rem] mt-1 text-left">Policy
+              #{{payingPolicy.id}} Disbursement</p>
+          </div>
+        </div>
+
+        <div class="space-y-6 text-left">
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Sum-Certain
+              Amount (₹)</label>
+            <input type="number" [(ngModel)]="paymentAmount"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[1.1rem] font-black text-[#001a35] outline-none"
+              readonly />
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Transaction
+              Reference</label>
+            <input type="text" [(ngModel)]="paymentRef"
+              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20"
+              placeholder="e.g. TXN998877" />
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 pt-6">
+            <button
+              class="w-full sm:flex-1 bg-[#001a35] text-white py-4 sm:py-5 rounded-2xl font-black text-[0.75rem] sm:text-sm uppercase tracking-widest shadow-xl shadow-[#001a35]/20 hover:shadow-[#001a35]/40 hover:-translate-y-1 transition-all border-none cursor-pointer disabled:opacity-50"
+              [disabled]="submitting() || !paymentRef" (click)="makePayment()">{{ submitting() ? 'PROCESSING...' :
+              'CONFIRM SETTLEMENT' }}</button>
+            <button
+              class="w-full sm:w-auto bg-slate-50 text-slate-500 px-4 md:px-4 md:px-5 py-4 sm:py-5 rounded-2xl font-black text-[0.75rem] sm:text-sm uppercase tracking-widest hover:bg-slate-100 transition-all border-none cursor-pointer"
+              (click)="payingPolicy = null">CANCEL</button>
+          </div>
+        </div>
+
+        <div *ngIf="payMsg()"
+          class="mt-4 md:mt-6 p-6 rounded-2xl text-[0.8rem] font-bold flex items-center gap-3 animate-fade-in"
+          [class]="payErr() ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+          <i class="fa-solid" [class]="payErr() ? 'fa-triangle-exclamation' : 'fa-circle-check'"></i>
+          <p class="m-0 uppercase tracking-widest font-black">{{ payMsg() }}</p>
+        </div>
+      </div>
+    </div>
+    }
+  </main>
+</div>

@@ -1,0 +1,102 @@
+<div class="dashboard-layout">
+      <aside class="sidebar">
+        <div class="sidebar-brand"><i class="fa-solid fa-shield-halved"></i> EventGuard</div>
+        <nav class="sidebar-nav">
+          <a (click)="tab.set('assigned')" [class.active]="tab() === 'assigned'"><i class="fa-solid fa-clipboard-list"></i> Assigned Claims</a>
+          <a (click)="tab.set('all')" [class.active]="tab() === 'all'"><i class="fa-solid fa-chart-bar"></i> All Claims</a>
+          <a (click)="tab.set('analytics')" [class.active]="tab() === 'analytics'"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+        </nav>
+      </aside>
+      <main class="dashboard-main">
+        <div class="topbar">
+          <h1>Claims Officer Dashboard</h1>
+          <span class="user-badge"><i class="fa-solid fa-user"></i> {{ userName }}</span>
+        </div>
+
+        <!-- ASSIGNED CLAIMS -->
+        <div *ngIf="tab() === 'assigned'" class="tab-content">
+          <div class="section-header">
+            <h2>Claims Assigned to Me</h2>
+            <button class="btn-outline" (click)="loadMyClaims()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          </div>
+          <div *ngIf="myClaims.length === 0" class="empty-state">No claims assigned to you.</div>
+          <div class="claims-list">
+            <div *ngFor="let c of myClaims" class="claim-card">
+              <div class="claim-top">
+                <div>
+                  <h3>Claim #{{c.id}}</h3>
+                  <small>Policy #{{c.policyId}} • Customer #{{c.customerId}}</small>
+                </div>
+                <span class="badge" [class]="'badge-' + c.status?.toLowerCase()">{{c.status}}</span>
+              </div>
+              <div class="claim-info">
+                <div class="info-row"><span>Amount:</span> <b>₹{{c.claimAmount | number}}</b></div>
+                <div *ngIf="c.fraudScore" class="info-row">
+                  <span>Fraud Score:</span>
+                  <b [style.color]="c.fraudFlag ? '#c62828' : '#2e7d32'">{{c.fraudScore}} / 100 {{ c.fraudFlag ? '' : '' }}<i [class]="c.fraudFlag ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-check'" [style.margin-left]="'4px'"></i></b>
+                </div>
+                <p class="claim-desc">{{c.description}}</p>
+              </div>
+              <div class="claim-actions" *ngIf="c.status === 'UnderReview' || c.status === 'Submitted'">
+                <button class="btn-info" (click)="runFraud(c)" [disabled]="loading()">🤖 Run AI Fraud Check</button>
+                <textarea [(ngModel)]="c.notes" class="form-control mt-2" rows="2" placeholder="Review notes..."></textarea>
+                <div class="action-btns mt-2">
+                  <button class="btn-success" [disabled]="loading()" (click)="approve(c)"><i class="fa-solid fa-circle-check"></i> Approve</button>
+                  <button class="btn-danger" [disabled]="loading()" (click)="reject(c)">❌ Reject</button>
+                </div>
+              </div>
+              <div *ngIf="c.status === 'Approved'">
+                <textarea [(ngModel)]="c.settlementNotes" class="form-control mt-2" rows="2" placeholder="Settlement notes..."></textarea>
+                <button class="btn-primary mt-2" [disabled]="loading()" (click)="settle(c)"><i class="fa-solid fa-coins"></i> Settle Claim</button>
+              </div>
+              <div *ngIf="c._msg" class="alert" [class.alert-success]="!c._err" [class.alert-error]="c._err">{{c._msg}}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALL CLAIMS -->
+        <div *ngIf="tab() === 'all'" class="tab-content">
+          <div class="section-header">
+            <h2>All Claims</h2>
+            <button class="btn-outline" (click)="loadAllClaims()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          </div>
+          <div *ngIf="allClaims.length === 0" class="empty-state">No claims found.</div>
+          <table *ngIf="allClaims.length > 0" class="data-table">
+            <thead><tr><th>ID</th><th>Policy</th><th>Customer</th><th>Amount</th><th>Fraud</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let c of allClaims">
+                <td>#{{c.id}}</td>
+                <td>Policy #{{c.policyId}}</td>
+                <td>Customer #{{c.customerId}}</td>
+                <td>₹{{c.claimAmount | number}}</td>
+                <td>
+                  <span *ngIf="c.fraudScore">{{c.fraudScore}} <i [class]="c.fraudFlag ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-check'"></i></span>
+                  <span *ngIf="!c.fraudScore" class="text-muted">—</span>
+                </td>
+                <td><span class="badge" [class]="'badge-' + c.status?.toLowerCase()">{{c.status}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ==================== ANALYTICS ==================== -->
+        <div *ngIf="tab() === 'analytics'" class="tab-content">
+          <div class="analytics-toolbar">
+            <h2><i class="fa-solid fa-chart-line"></i> Claims Analytics</h2>
+            <div class="chart-selector">
+              <label>Report:</label>
+              <select [(ngModel)]="clmSelectedChart" (ngModelChange)="onClmChartChange()" class="form-control chart-dropdown">
+                <option value="statusBreakdown">Claims Status Breakdown</option>
+                <option value="fraudAnalysis">Fraud Score Distribution</option>
+                <option value="processingSummary">Monthly Processing Trend</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">{{ clmChartTitles[clmSelectedChart] }}</div>
+            <div class="chart-wrapper"><canvas id="clmAnalyticsCanvas"></canvas></div>
+            <div class="chart-summary" *ngIf="clmChartSummary">{{ clmChartSummary }}</div>
+          </div>
+        </div>
+      </main>
+    </div>

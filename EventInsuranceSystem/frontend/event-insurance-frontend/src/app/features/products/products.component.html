@@ -1,0 +1,37 @@
+<div class="container page-content">
+      <div class="page-header">
+        <h2>AI Policy Generator</h2>
+        <div class="section-line"></div>
+        <p>Describe your event below, and our AI Engine will suggest the best coverage options instantly.</p>
+      </div>
+      
+      <div class="card p-4 form-card">
+        <label class="form-label" style="font-size: 1.1rem;">Event Details</label>
+        <textarea [(ngModel)]="eventDetails" class="form-control" rows="4" 
+          placeholder="E.g., I am hosting a 3-day outdoor music festival for 5000 people. We will have food trucks and pyrotechnics."></textarea>
+        
+        <button [disabled]="loading || !eventDetails" class="btn btn-primary mt-3" (click)="getSuggestions()">
+          {{ loading ? 'ANALYZING...' : 'GET QUOTES' }}
+        </button>
+      </div>
+
+      <div *ngIf="suggestions.length > 0" class="suggestions-container">
+        <h3>Your Personalized Coverage Options</h3>
+        <div class="product-cards mt-3">
+            <div *ngFor="let suggestion of suggestions" class="card product-card">
+              <div class="card-image bg-personal"></div>
+              <div class="card-body">
+                <h3>{{suggestion.productName}}</h3>
+                <p><b>Estimated Claim Limit:</b> {{suggestion.suggestedCoverageAmount | currency}}</p>
+                <p><b>Premium Base:</b> {{suggestion.suggestedPremiumAmount | currency}}</p>
+                <p><b>Risk Level:</b> {{suggestion.riskCategory}}</p>
+                
+                <p style="margin-top:1rem;"><i>"{{suggestion.aiReasoning}}"</i></p>
+                
+                <button *ngIf="isCustomer()" (click)="apply(suggestion)" class="btn btn-secondary mt-2 w-100">APPLY NOW</button>
+                <p *ngIf="!isCustomer()" class="text-danger mt-2"><small><i>Please login as a Customer to apply.</i></small></p>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>

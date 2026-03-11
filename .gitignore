@@ -1,0 +1,52 @@
+# .gitignore for EventInsuranceSystem Capstone project
+
+# .NET / C#
+[Bb]in/
+[Oo]bj/
+[Tt]estResults/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vs-*
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+
+# Angular
+.angular/
+dist/
+tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+bin/
+include/
+lib/
+share/
+pip-selfcheck.json
+
+.vscode/
+# .idea/
+# *.swp
+# *.swo
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Misc
+*.postman_dump.json

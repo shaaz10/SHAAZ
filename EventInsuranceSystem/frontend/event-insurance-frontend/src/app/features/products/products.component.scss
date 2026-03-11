@@ -1,0 +1,20 @@
+.page-content { padding: 4rem 2rem; min-height: 50vh; }
+    .page-header { margin-bottom: 2rem; text-align: center; }
+    h2 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 0.5rem; }
+    .section-line { width: 60px; height: 4px; background-color: var(--secondary-color); margin: 0 auto 1.5rem; }
+    .form-card { max-width: 800px; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 2px solid var(--primary-color);}
+    .mt-3 { margin-top: 1rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .w-100 { width: 100%; text-align: center; }
+    .text-danger { color: var(--secondary-color); }
+    .suggestions-container { margin-top: 4rem; text-align: center; border-top: 1px solid #ccc; padding-top: 2rem;}
+    
+    .product-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+    .product-card { padding: 0; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; text-align: left;}
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+    .card-image { height: 160px; background-size: cover; background-position: center; }
+    .card-image.bg-personal { background-color: #0B2A4A; }
+    .card-body { padding: 2rem; }
+    .card-body h3 { font-size: 1.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+    .card-body p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .card-body p b { color: var(--text-primary); }

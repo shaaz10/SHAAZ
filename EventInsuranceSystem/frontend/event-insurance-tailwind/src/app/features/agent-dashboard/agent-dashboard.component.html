@@ -1,0 +1,558 @@
+<!-- Mobile Menu Backdrop -->
+@if (isSidebarOpen()) {
+<div (click)="toggleSidebar()"
+  class="lg:hidden fixed inset-0 bg-[#001a35]/60 z-[1001] backdrop-blur-sm animate-fade-in"></div>
+}
+
+<!-- Mobile Branding & Toggle -->
+<div
+  class="lg:hidden fixed top-0 left-0 right-0 h-[70px] bg-[#001a35] flex items-center justify-between px-4 md:px-5 z-[1000] border-b border-white/5">
+  <img src="logo.svg" class="h-8 brightness-0 invert" alt="Logo">
+  <button (click)="toggleSidebar()" class="text-white p-2 hover:bg-white/10 rounded-lg transition-colors">
+    <i class="fa-solid" [class]="isSidebarOpen() ? 'fa-xmark text-2xl' : 'fa-bars-staggered text-xl'"></i>
+  </button>
+</div>
+
+<!-- Agent Sidebar -->
+<aside
+  class="fixed top-0 left-0 bottom-0 w-[240px] bg-[#001a35] text-white overflow-y-auto transition-transform duration-300 z-[1002] shadow-[20px_0_50px_rgba(0,0,0,0.1)] font-sans flex flex-col"
+  [class.translate-x-0]="isSidebarOpen()" [class.-translate-x-full]="!isSidebarOpen()" [class.lg:translate-x-0]="true">
+
+  <div class="p-8 pb-12 border-b border-white/5">
+    <img src="logo.svg" alt="The Hartford" class="h-10 mb-5 md:mb-6 cursor-pointer object-contain brightness-0 invert"
+      routerLink="/">
+
+    <div class="flex items-center gap-4 group">
+      <div
+        class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#004b87] to-[#003866] flex items-center justify-center text-xl font-black shadow-lg shadow-[#004b87]/20 group-hover:scale-110 transition-transform text-white">
+        {{ userName.charAt(0).toUpperCase() }}
+      </div>
+      <div class="overflow-hidden">
+        <p class="text-[0.7rem] font-black text-[#fac9c8] uppercase tracking-[2px] m-0 mb-1">Insurance Agent</p>
+        <p class="text-white font-bold text-[1rem] truncate m-0">{{ userName }}</p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="px-6 py-4 space-y-2 flex-grow">
+    <button (click)="tab.set('requests'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'requests' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-inbox w-6 text-center"></i> Assigned Leads
+    </button>
+
+    <button (click)="tab.set('applications'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'applications' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-file-signature w-6 text-center"></i> Active Apps
+    </button>
+
+    <button (click)="tab.set('policies'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'policies' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-shield-halved w-6 text-center"></i> My Books
+    </button>
+
+    <button (click)="tab.set('commissions'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'commissions' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-receipt w-6 text-center"></i> Earnings
+    </button>
+
+    <button (click)="tab.set('analytics'); isSidebarOpen.set(false)"
+      class="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-[0.9rem] font-bold transition-all border-none cursor-pointer text-left"
+      [class]="tab() === 'analytics' ? 'bg-[#004b87] text-white shadow-xl shadow-[#004b87]/25' : 'text-white/60 hover:text-white hover:bg-white/5'">
+      <i class="fa-solid fa-chart-line w-6 text-center"></i> Sales Performance
+    </button>
+  </nav>
+
+  <div class="p-6 mt-auto">
+    <a routerLink="/"
+      class="flex items-center gap-4 px-4 md:px-5 py-4 rounded-xl text-[0.9rem] font-bold text-white/50 hover:text-white hover:bg-white/5 no-underline transition-all group">
+      <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> Agent Sign Out
+    </a>
+  </div>
+</aside>
+
+<!-- Main Agent Content Area -->
+<main class="lg:ml-[240px] bg-[#f8fafc] min-h-screen transition-all duration-300 pt-[70px] lg:pt-0 p-4 sm:p-4 lg:p-8">
+  <header
+    class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 bg-white p-6 sm:p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-slate-100 gap-3 md:gap-4">
+    <div class="flex items-center gap-4 sm:gap-3 md:gap-4">
+      <div
+        class="w-12 h-12 sm:w-16 sm:h-16 bg-[#004b87] rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-blue-50 shrink-0">
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <div>
+        <h1 class="text-2xl sm:text-xl md:text-2xl text-[#001a35] font-black m-0 font-heading leading-tight">
+          Agent <span class="text-[#004b87]">Intelligence Hub</span>
+        </h1>
+        <div class="flex items-center gap-3 mt-1">
+          <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+          <p class="text-[0.65rem] sm:text-[0.7rem] text-slate-400 font-black m-0 uppercase tracking-[2px]">Status:
+            <span class="text-emerald-500">Active</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4 bg-slate-50 px-4 md:px-5 py-3 rounded-2xl border border-slate-100">
+      <i class="fa-solid fa-crown text-amber-500"></i>
+      <span class="text-[#001a35] font-black text-[0.8rem] sm:text-[0.85rem] uppercase tracking-widest">{{ userName
+        }}</span>
+    </div>
+  </header>
+
+  <!-- Performance Filter Hub -->
+  @if (tab() !== 'analytics') {
+  <div
+    class="mb-8 flex flex-wrap items-center gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] animate-fade-in-down">
+    <div class="relative flex-1 min-w-[280px]">
+      <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+      <input type="text" [(ngModel)]="filterTerm" placeholder="Search my portfolio (ID, Customer, Type)..."
+        class="w-full pl-14 pr-6 py-4 bg-slate-50 border-none rounded-2xl text-[0.9rem] font-medium focus:ring-4 focus:ring-[#004b87]/5 outline-none transition-all placeholder:text-slate-300">
+    </div>
+    <div class="flex items-center gap-4 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+      <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">Start</label>
+      <input type="date" [(ngModel)]="startDt"
+        class="bg-transparent border-none text-[0.85rem] font-bold text-[#001a35] outline-none">
+    </div>
+    <div class="flex items-center gap-4 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+      <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">End</label>
+      <input type="date" [(ngModel)]="endDt"
+        class="bg-transparent border-none text-[0.85rem] font-bold text-[#001a35] outline-none">
+    </div>
+    <button (click)="resetFilters()"
+      class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#f8fafc] text-white/40 hover:text-[#e2231a] hover:bg-red-50 transition-all border-none cursor-pointer">
+      <i class="fa-solid fa-rotate-left"></i>
+    </button>
+  </div>
+  }
+
+
+  <div class="max-w-7xl mx-auto pb-20">
+
+    <!-- ASSIGNED REQUESTS -->
+    @if (tab() === 'requests') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-2xl sm:text-xl md:text-2xl font-black font-heading mb-1 text-white">Assigned
+            Leads</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest text-white">Incoming risk profiles
+          </p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm shrink-0"
+          (click)="loadRequests()"><i class="fa-solid fa-sync"></i> SYNC PIPELINE</button>
+      </div>
+
+      @if (requests.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-2 border-slate-100/50 shadow-inner group">
+        <div
+          class="max-w-[150px] sm:max-w-[200px] mx-auto mb-5 md:mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all">
+          <img src="https://illustrations.popsy.co/blue/creative-process.svg" alt="Empty Pipeline"
+            class="w-full h-auto">
+        </div>
+        <p class="text-slate-500 font-black uppercase tracking-widest text-[0.7rem] sm:text-[0.75rem]">No pending leads
+          at this time.</p>
+      </div>
+      }
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4 sm:gap-4 md:gap-3 md:gap-4">
+        @for (req of filterList(requests); track req.id) {
+        <div
+          class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)] transition-all hover:-translate-y-2 hover:shadow-[0_40px_100px_rgba(0,0,0,0.05)]">
+          <div class="flex justify-between items-start mb-4 md:mb-6 pb-8 border-b border-slate-50">
+            <div>
+              <h3 class="text-[#001329] text-xl font-black font-heading mb-1">{{req.eventType}}</h3>
+              <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">REQUEST #{{req.id}}</p>
+            </div>
+            <span class="px-5 py-2 rounded-xl text-[0.6rem] font-black uppercase tracking-widest italic border shrink-0"
+              [class]="(req.status==='AgentAssigned'||req.status==='Submitted')?'bg-amber-50 text-amber-700 border-amber-100':'bg-emerald-50 text-emerald-700 border-emerald-100'">{{req.status}}</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3 md:gap-4 mb-5 md:mb-6">
+            <div class="bg-slate-50/50 p-6 rounded-3xl">
+              <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-widest mb-2">Exposure Context</p>
+              <div class="flex items-center gap-2 text-[#001a35] font-bold text-[0.85rem] break-all">
+                <i class="fa-solid fa-map-pin text-[#004b87]/30"></i> {{req.eventLocation || 'N/A'}}
+              </div>
+              <div class="flex items-center gap-2 text-[#001a35] font-bold text-[0.85rem] mt-1">
+                <i class="fa-solid fa-calendar text-[#004b87]/30"></i> {{req.eventDate | date:'mediumDate'}}
+              </div>
+            </div>
+            <div class="bg-slate-50/50 p-6 rounded-3xl">
+              <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-widest mb-2">Financial Scope</p>
+              <div class="text-[#001a35] font-black text-[1.1rem]">Budget: ₹{{ (req.eventBudget || 0) | number }}</div>
+              <div class="text-[#004b87] text-[0.75rem] font-bold mt-1">Target Coverage: ₹{{ (req.coverageRequested ||
+                0) | number }}</div>
+            </div>
+          </div>
+
+          <!-- Suggestions Flow -->
+          @if (req._suggestions && req._suggestions.length > 0) {
+          <div class="mb-5 md:mb-6">
+            <p class="text-slate-400 text-[0.65rem] font-black uppercase tracking-[2px] mb-4">ACTIVE PROPOSALS</p>
+            <div class="space-y-3">
+              @for (s of req._suggestions; track s.id) {
+              <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100 transition-all hover:bg-emerald-50 gap-4">
+                <div class="flex items-center gap-4">
+                  <i class="fa-solid fa-check-circle text-emerald-500 shrink-0"></i>
+                  <div>
+                    <p class="text-[#001a35] font-black text-[0.85rem] mb-0.5 leading-tight">{{s.policyName}}</p>
+                    <p class="text-emerald-700 text-[0.7rem] font-bold">Premium: ₹{{s.suggestedPremium | number}}</p>
+                  </div>
+                </div>
+                <span
+                  class="text-emerald-700 text-[0.6rem] font-black uppercase tracking-widest italic shrink-0">{{s.status}}</span>
+              </div>
+              }
+            </div>
+          </div>
+          }
+
+          <!-- Suggest Policy Form -->
+          @if (req.status === 'AgentAssigned' || req.status === 'Submitted') {
+          <div class="bg-slate-50 rounded-2xl p-6 sm:p-8 border border-white">
+            <p class="text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px] mb-6 flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-[#004b87]"></i> GENERATE PROPOSAL
+            </p>
+            <div class="space-y-4">
+              <div class="relative">
+                <select
+                  class="w-full bg-white border-2 border-transparent rounded-2xl px-4 md:px-5 py-4 text-[0.85rem] font-bold text-[#001a35] outline-none focus:border-[#004b87]/10 transition-all appearance-none cursor-pointer"
+                  [(ngModel)]="req._selectedProduct">
+                  <option [ngValue]="null" disabled>SELECT RISK PRODUCT...</option>
+                  @for (p of policyProducts; track p.id) {
+                  <option [ngValue]="p.id">{{p.name}} (₹{{p.coverageAmount | number}}
+                    coverage)</option>
+                  }
+                </select>
+                <i
+                  class="fa-solid fa-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none text-[0.7rem]"></i>
+              </div>
+              <div class="relative">
+                <i
+                  class="fa-solid fa-indian-rupee-sign absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 text-[0.8rem]"></i>
+                <input type="number"
+                  class="w-full bg-white border-2 border-transparent rounded-2xl pl-12 pr-6 py-4 text-[0.85rem] font-bold text-[#001a35] outline-none focus:border-[#004b87]/10 transition-all"
+                  [(ngModel)]="req._suggestedPremium" placeholder="ENTER PREMIUM">
+              </div>
+              <button
+                class="w-full bg-[#001a35] text-white py-5 rounded-2xl font-black text-[0.8rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-[#e2231a] active:scale-95 shadow-xl shadow-[#001a35]/10 disabled:opacity-50 border-none"
+                [disabled]="loading() || !req._selectedProduct || !req._suggestedPremium" (click)="suggestPolicy(req)">
+                DISPATCH PROPOSAL
+              </button>
+            </div>
+          </div>
+          }
+
+          @if (req._msg) {
+          <div class="mt-6 p-6 rounded-2xl text-[0.8rem] font-bold flex items-center gap-3 animate-fade-in"
+            [class]="req._err ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+            <i class="fa-solid" [class]="req._err ? 'fa-triangle-exclamation' : 'fa-circle-check'"></i>
+            <span class="break-words">{{req._msg}}</span>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- APPLICATIONS -->
+    @if (tab() === 'applications') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-2xl sm:text-xl md:text-2xl font-black font-heading mb-1 text-white">Customer
+            Applications
+          </h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest text-white">Validation queue</p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm shrink-0"
+          (click)="loadApplications()"><i class="fa-solid fa-sync"></i> REFRESH QUEUE</button>
+      </div>
+
+      @if (applications.length === 0) {
+      <div class="bg-white rounded-3xl py-24 text-center border-4 border-dashed border-slate-100">
+        <div
+          class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 text-2xl mb-4 mx-auto shrink-0">
+          <i class="fa-solid fa-file-shield"></i>
+        </div>
+        <p class="text-slate-400 font-black uppercase tracking-widest text-[0.75rem]">Application queue cleared.</p>
+      </div>
+      }
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4 sm:gap-4 md:gap-3 md:gap-4">
+        @for (app of filterList(applications); track app.id) {
+        <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.02)]">
+          <div class="flex justify-between items-start mb-4 md:mb-6 pb-8 border-b border-slate-50">
+            <div>
+              <h3 class="text-[#001329] text-xl font-black font-heading mb-1">{{app.customer?.fullName || 'Client
+                Profile'}}</h3>
+              <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest">APPLICATION #{{app.id}}</p>
+            </div>
+            <span class="px-5 py-2 rounded-xl text-[0.6rem] font-black uppercase tracking-widest italic border shrink-0"
+              [class]="(app.status==='PendingValidation'||app.status==='UnderReview')?'bg-amber-50 text-amber-700 border-amber-100':(app.status==='Approved'||app.status==='AgentApproved')?'bg-emerald-50 text-emerald-700 border-emerald-100':'bg-red-50 text-red-700 border-red-100'">{{app.status}}</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-6 sm:p-8 rounded-2xl mb-5 md:mb-6 space-y-4">
+            <div class="flex justify-between items-center gap-4">
+              <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem] shrink-0">Policy
+                Product</span>
+              <span class="text-[#001a35] font-black text-[0.85rem] text-right">{{app.policyProduct?.name}}</span>
+            </div>
+            <div class="flex justify-between items-center gap-4">
+              <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem] shrink-0">Risk
+                Integrity</span>
+              <div class="flex items-center gap-3">
+                <span class="text-[#004b87] font-black text-[1rem]">{{app.riskScore}}%</span>
+                <span
+                  class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[0.55rem] font-black rounded-lg uppercase tracking-widest shrink-0">{{app.riskCategory}}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (app.status === 'PendingValidation' || app.status === 'UnderReview' || app.status === 'Validated') {
+          <div class="space-y-6">
+            @if (app.status === 'PendingValidation') {
+            <button
+              class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black text-[0.8rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-emerald-700 active:scale-95 shadow-xl shadow-emerald-600/10 disabled:opacity-50 border-none"
+              [disabled]="loading()" (click)="validateDocs(app)">
+              <i class="fa-solid fa-robot mr-3"></i>AI DOCUMENT VERIFICATION
+            </button>
+            }
+
+            <div class="space-y-2">
+              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">ADJUDICATION
+                NOTES</label>
+              <textarea [(ngModel)]="app._notes"
+                class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
+                rows="3" placeholder="Enter formal findings..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button
+                class="flex-1 bg-slate-100 text-slate-500 py-4 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-red-50 hover:text-red-700 active:scale-95 border-none h-14 flex items-center justify-center"
+                [disabled]="loading()" (click)="reviewApp(app, false)">
+                <i class="fa-solid fa-xmark mr-2"></i>REJECT
+              </button>
+              <button
+                class="flex-1 bg-[#001a35] text-white py-4 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-[#e2231a] active:scale-95 shadow-lg border-none h-14 flex items-center justify-center"
+                [disabled]="loading()" (click)="escalateApp(app)">
+                <i class="fa-solid fa-arrow-up mr-2"></i>ESCALATE
+              </button>
+            </div>
+          </div>
+          }
+
+          @if (app._msg) {
+          <div class="mt-6 p-6 rounded-2xl text-[0.8rem] font-bold flex items-center gap-3 animate-fade-in"
+            [class]="app._err ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'">
+            <i class="fa-solid" [class]="app._err ? 'fa-triangle-exclamation' : 'fa-circle-check'"></i>
+            <span class="break-words">{{app._msg}}</span>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- POLICIES -->
+    @if (tab() === 'policies') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-2xl sm:text-xl md:text-2xl font-black font-heading mb-1 text-white">Managed
+            Portfolio</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest text-white">Active policy registry
+          </p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm shrink-0"
+          (click)="loadPolicies()"><i class="fa-solid fa-sync"></i> SYNC REGISTRY</button>
+      </div>
+
+      @if (policies.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-4 border-dashed border-slate-100">
+        <div
+          class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 text-2xl mb-4 mx-auto shrink-0">
+          <i class="fa-solid fa-shield-blank"></i>
+        </div>
+        <p class="text-slate-400 font-black uppercase tracking-widest text-[0.75rem]">Portfolio empty.</p>
+      </div>
+      }
+
+      @if (policies.length > 0) {
+      <div class="bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 overflow-x-auto">
+        <table class="w-full text-left min-w-[800px]">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Ref ID</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Client Context
+              </th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Exposure</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Premium</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                State</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (p of policies; track p.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">#{{p.id}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <div class="text-[0.85rem] font-bold text-slate-600">Client ID: {{p.customerId}}</div>
+                <div class="text-[0.65rem] text-slate-400 font-black uppercase tracking-widest mt-1">Lifecycle: Active
+                </div>
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">₹{{p.coverageAmount|number}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#e2231a]">₹{{p.premiumAmount|number}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4">
+                <span
+                  class="px-4 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-[0.6rem] font-black uppercase tracking-widest border border-emerald-100 italic">ENFORCED</span>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- COMMISSIONS -->
+    @if (tab() === 'commissions') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-2xl sm:text-xl md:text-2xl font-black font-heading mb-1 text-white">Financial
+            Intelligence
+          </h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest text-white">Attribution ledger</p>
+        </div>
+        <button
+          class="bg-white text-[#001a35] px-4 md:px-4 md:px-5 py-4 rounded-xl border border-slate-200 font-black text-[0.75rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-slate-50 active:scale-95 flex items-center gap-3 shadow-sm shrink-0"
+          (click)="loadCommissions()"><i class="fa-solid fa-sync"></i> SYNC EARNINGS</button>
+      </div>
+
+      @if (commissions.length === 0) {
+      <div class="bg-white rounded-3xl py-16 text-center border-4 border-dashed border-slate-100">
+        <div
+          class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 text-2xl mb-4 mx-auto shrink-0">
+          <i class="fa-solid fa-wallet"></i>
+        </div>
+        <p class="text-slate-400 font-black uppercase tracking-widest text-[0.7rem] sm:text-[0.75rem]">No earnings
+          detected.</p>
+      </div>
+      }
+
+      @if (commissions.length > 0) {
+      <div
+        class="bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-slate-100 mb-5 md:mb-6 overflow-x-auto">
+        <table class="w-full text-left min-w-[800px]">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Ref ID</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Source Policy</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Rate</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Attribution</th>
+              <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+                Timestamp</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            @for (c of filterList(commissions); track c.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-[#001a35]">#{{c.id}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.8rem] font-bold text-slate-600">Policy #{{c.policyId}}
+              </td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.85rem] font-black text-[#004b87]">10% (Fixed)</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.9rem] font-black text-emerald-600">
+                ₹{{c.commissionAmount|number}}</td>
+              <td class="px-4 py-3 md:px-5 md:py-4 text-[0.7rem] font-black text-slate-400 uppercase tracking-widest">
+                {{c.createdAt|date:'dd MMM yyyy'}}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        class="bg-[#001a35] rounded-3xl p-5 sm:p-8 text-white shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4 md:gap-3 md:gap-4 border border-white/5 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#004b87]/20 to-transparent pointer-events-none"></div>
+        <div class="relative">
+          <h3 class="text-[#fac9c8] text-[0.75rem] font-black uppercase tracking-[4px] mb-2">Portfolio Yield</h3>
+          <p class="text-white/60 text-[0.85rem] font-medium max-w-sm m-0">Consolidated earnings for this cycle.</p>
+        </div>
+        <div class="text-center md:text-right relative shrink-0">
+          <p class="text-slate-400 text-[0.65rem] font-black uppercase tracking-widest mb-1">ACCUMULATED REVENUE</p>
+          <div class="text-2xl md:text-xl md:text-2xl sm:text-5xl font-black font-heading tracking-tighter">₹{{
+            totalCommission | number }}
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- ANALYTICS -->
+    @if (tab() === 'analytics') {
+    <div class="animate-fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 md:mb-6 gap-3 md:gap-4">
+        <div>
+          <h2 class="text-[#001329] text-2xl sm:text-xl md:text-2xl font-black font-heading mb-1 text-white">Agent
+            Performance</h2>
+          <p class="text-slate-400 text-[0.7rem] font-black uppercase tracking-widest text-white">Analytics</p>
+        </div>
+        <div
+          class="flex items-center gap-4 bg-white px-4 md:px-5 py-2 rounded-2xl border border-slate-100 shadow-sm shrink-0">
+          <label class="font-black text-slate-400 text-[0.65rem] uppercase tracking-widest">Metric:</label>
+          <select [(ngModel)]="agentSelectedChart" (ngModelChange)="onAgentChartChange()"
+            class="py-2 border-none font-black text-[#001a35] text-[0.8rem] outline-none bg-transparent cursor-pointer appearance-none">
+            <option value="commByPolicy">Commission Attribution</option>
+            <option value="workBreakdown">Pipeline Distribution</option>
+            <option value="policyCoverage">Risk Spectrum Analysis</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-3xl p-6 sm:p-6 md:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.04)] border border-slate-100">
+        <h4
+          class="text-[#001329] text-[0.75rem] font-black uppercase tracking-[2px] mb-4 md:mb-6 bg-slate-50 inline-block px-4 md:px-5 py-2 rounded-full">
+          {{ agentChartTitles[agentSelectedChart] }}</h4>
+        <div
+          class="relative h-[300px] sm:h-[300px] w-full bg-slate-50/30 rounded-2xl p-4 sm:p-8 border border-slate-100/50">
+          <canvas id="agentAnalyticsCanvas" class="w-full h-full"></canvas>
+        </div>
+        @if (agentChartSummary) {
+        <div
+          class="mt-4 md:mt-6 p-6 sm:p-8 bg-[#001a35]/[0.02] rounded-2xl border-l-8 border-[#001a35] flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-[#001a35] flex items-center justify-center text-white shrink-0 shadow-lg">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <p class="text-[#001a35] text-[0.85rem] sm:text-[0.9rem] font-semibold leading-relaxed m-0 italic">{{
+            agentChartSummary }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</main>

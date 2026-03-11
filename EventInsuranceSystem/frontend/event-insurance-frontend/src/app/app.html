@@ -1,0 +1,84 @@
+<!-- Top Red Line -->
+<div class="top-red-line"></div>
+
+<!-- Navigation -->
+<nav class="hartford-navbar">
+  <div class="container navbar-container">
+    <div class="logo">
+      <img src="logo.svg" alt="The Hartford" style="height: 40px; cursor: pointer;" routerLink="/">
+    </div>
+
+    <ul class="nav-links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
+      <li><a routerLink="/under-construction" routerLinkActive="active">Agentless Policy Request</a></li>
+    </ul>
+
+    <!-- Logged-In User Actions (Signal-based) -->
+    @if (authService.currentUser(); as user) {
+    <div class="nav-actions">
+      <!-- Notifications Bell -->
+      <span class="notification-bell" (click)="toggleNotifications()">
+        <i class="fa-solid fa-bell"></i>
+        @if (notificationService.unreadCount() > 0) {
+        <span class="badge">{{ notificationService.unreadCount() }}</span>
+        }
+      </span>
+
+      <!-- Dropdown UI -->
+      @if (showNotifications) {
+      <div class="notification-dropdown">
+        <div class="dropdown-header">
+          <h4>Notifications</h4>
+          <button (click)="markAllAsRead()" class="btn-text">Mark all read</button>
+        </div>
+        <div class="dropdown-body">
+          @if (notificationService.notifications().length === 0) {
+          <div class="empty-notif">No notifications yet.</div>
+          }
+          @for (n of notificationService.notifications(); track n.id) {
+          <div class="notification-item" [class.unread]="!n.isRead">
+            <div class="notif-content">
+              <strong>{{ n.title }}</strong>
+              <p>{{ n.message }}</p>
+              <small>{{ n.createdAt | date:'short' }}</small>
+            </div>
+            <button class="notif-delete-btn" (click)="deleteNotification($event, n.id)" title="Mark as Read & Delete">
+              <i class="fa-solid fa-check"></i> Read
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      <span class="user-greeting">Hi, <b>{{user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ||
+          user['unique_name'] || user['name'] ||
+          user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] ||
+          user['email'] || 'User'}}</b></span>
+      <a (click)="logout()" class="nav-login" style="cursor: pointer;">LOG OUT</a>
+    </div>
+    } @else {
+    <div class="nav-actions">
+      <a routerLink="/login" class="nav-login">LOG IN</a>
+    </div>
+    }
+  </div>
+</nav>
+
+<!-- Main Router View -->
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Enterprise Footer -->
+<footer class="hartford-footer">
+  <div class="container footer-container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Hartford - Event Insurance Solution. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Legal Info</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>

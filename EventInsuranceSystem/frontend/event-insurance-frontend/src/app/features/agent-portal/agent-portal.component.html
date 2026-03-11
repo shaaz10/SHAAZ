@@ -1,0 +1,44 @@
+<div class="container page-content">
+      <div class="page-header">
+        <h2>Agent Dashboard</h2>
+        <div class="section-line"></div>
+        <p>Review customer applications and manage active policies securely.</p>
+      </div>
+      
+      <div *ngIf="!isAgent()" class="card p-4 form-card text-center">
+        <h3 class="text-danger">Access Denied</h3>
+        <p>Please log in with an Agent account to access this portal.</p>
+      </div>
+
+      <div *ngIf="isAgent()">
+        <button class="btn btn-primary" (click)="loadPendingApplications()">
+          {{ loading ? 'LOADING...' : 'REFRESH PENDING APPLICATIONS' }}
+        </button>
+
+        <div *ngIf="applications.length === 0 && !loading" class="mt-4 p-4 card text-center">
+            <p>No applications are waiting for review at this time.</p>
+        </div>
+
+        <div class="application-list mt-4">
+            <div *ngFor="let app of applications" class="card application-card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h4>Application #{{app.id}}</h4>
+                        <span class="badge status-submitted">{{app.status}}</span>
+                    </div>
+                    
+                    <p><b>Customer ID:</b> {{app.customerId}}</p>
+                    <p><b>Policy Suggestion ID:</b> {{app.policySuggestionId}}</p>
+                    
+                    <div class="review-actions mt-3">
+                        <textarea [(ngModel)]="app.notes" class="form-control mb-2" rows="2" placeholder="Agent Notes / Reasoning..."></textarea>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success" [disabled]="loading" (click)="review(app, 'Approved')">APPROVE</button>
+                            <button class="btn btn-danger" [disabled]="loading" (click)="review(app, 'Rejected')">REJECT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>

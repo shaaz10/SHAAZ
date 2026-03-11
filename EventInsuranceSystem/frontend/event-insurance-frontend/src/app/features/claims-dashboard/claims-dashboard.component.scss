@@ -1,0 +1,67 @@
+.dashboard-layout { display: flex; min-height: calc(100vh - var(--navbar-height)); background: var(--background-color); }
+    .sidebar { width: 260px; background: var(--primary-dark); color: #fff; padding: 2rem 0; position: fixed; box-shadow: var(--shadow-md); z-index: 10; top: var(--navbar-height); height: calc(100vh - var(--navbar-height)); overflow-y: auto; }
+    .sidebar-brand { font-size: 1.5rem; font-weight: 800; padding: 0 1.5rem 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--heading-font); letter-spacing: -0.5px; }
+    .sidebar-nav a { display: block; padding: 1rem 1.5rem; color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.3s ease; text-decoration: none; border-left: 3px solid transparent; font-weight: 500;}
+    .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(255,255,255,0.06); color: #fff; border-left-color: var(--secondary-color); }
+    .dashboard-main { margin-left: 260px; flex: 1; padding: 2rem 3rem; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+    .topbar h1 { font-size: 2rem; color: var(--primary-color); font-weight: 800; font-family: var(--heading-font); margin: 0; }
+    .user-badge { background: #f1f5f9; color: var(--primary-color); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600; border: 1px solid #e2e8f0;}
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .section-header h2 { margin: 0; color: var(--primary-color); font-family: var(--heading-font); }
+    .claims-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+    .claim-card { background: #fff; border-radius: var(--border-radius); padding: 1.8rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: transform 0.2s, box-shadow 0.2s;}
+    .claim-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .claim-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color); }
+    .claim-top h3 { margin: 0; color: var(--primary-color); font-size: 1.1rem; font-family: var(--heading-font); }
+    .claim-top small { color: var(--text-secondary); }
+    .claim-info { margin-bottom: 1rem; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .info-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.4rem; }
+    .claim-desc { font-size: 0.95rem; color: var(--text-primary); margin: 0.8rem 0 0; line-height: 1.5;}
+    .claim-actions { margin-top: 1rem; padding-top: 1rem; }
+    .action-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.8rem;}
+    .form-control { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-sizing: border-box; }
+    .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 75, 135, 0.1); }
+    
+    .btn-primary { background: var(--primary-color); color: #fff; padding: 0.6rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: background 0.3s, transform 0.2s, box-shadow 0.2s; box-shadow: var(--shadow-sm); }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: var(--shadow-md);}
+    .btn-success { background: #2e7d32; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; box-shadow: var(--shadow-sm); transition: transform 0.2s;}
+    .btn-success:hover { background: #1b5e20; transform: translateY(-1px);}
+    .btn-danger { background: #d32f2f; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; box-shadow: var(--shadow-sm); transition: transform 0.2s;}
+    .btn-danger:hover { background: #b71c1c; transform: translateY(-1px);}
+    .btn-info { background: #1565c0; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; box-shadow: var(--shadow-sm); transition: transform 0.2s;}
+    .btn-info:hover { background: #0d47a1; transform: translateY(-1px);}
+    .btn-outline { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); padding: 0.6rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s ease;}
+    .btn-outline:hover { background: var(--primary-color); color: #fff; box-shadow: var(--shadow-sm);}
+    
+    .alert { padding: 0.8rem 1.2rem; border-radius: 8px; margin-top: 1rem; font-size: 0.95rem; font-weight: 500; border: 1px solid;}
+    .alert-success { background: #f0fdf4; color: #166534; border-color: #bbf7d0; box-shadow: var(--shadow-sm);}
+    .alert-error { background: #fef2f2; color: #991b1b; border-color: #fecaca; box-shadow: var(--shadow-sm);}
+    .empty-state { text-align: center; padding: 4rem; color: var(--text-secondary); background: #fff; border-radius: var(--border-radius); border: 1px dashed var(--border-color); font-size: 1.1rem; }
+    
+    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+    .data-table th { background: #f8fafc; color: var(--primary-dark); padding: 1rem 1.2rem; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
+    .data-table td { padding: 1.2rem; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; color: var(--text-primary); transition: background 0.2s; }
+    .data-table tr:hover td { background: #f1f5f9; }
+    .data-table tr:last-child td { border-bottom: none; }
+    
+    .badge { padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: inline-block; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .badge-submitted { background: #fef3c7; color: #b45309; border: 1px solid #fde68a;}
+    .badge-approved { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;}
+    .badge-rejected { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca;}
+    .badge-settled { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe;}
+    .badge-underreview { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff;}
+    .text-muted { color: var(--text-secondary); }
+    .mt-2 { margin-top: 0.8rem; }
+    .analytics-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .analytics-toolbar h2 { margin: 0; color: var(--primary-color); font-family: var(--heading-font); font-size: 1.4rem; }
+    .chart-selector { display: flex; align-items: center; gap: 0.75rem; }
+    .chart-selector label { font-weight: 600; color: #555; font-size: 0.9rem; white-space: nowrap; }
+    .chart-dropdown { padding: 0.6rem 1rem; border: 2px solid var(--primary-color) !important; border-radius: 8px !important; font-weight: 600; color: var(--primary-color); min-width: 200px; }
+    .chart-card { background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+    .chart-title { font-family: var(--heading-font); font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid #f0f4f8; }
+    .chart-wrapper { position: relative; height: 340px; }
+    .chart-wrapper canvas { width: 100% !important; height: 100% !important; }
+    .chart-summary { margin-top: 1rem; padding: 0.8rem 1rem; background: #f0f7ff; border-radius: 8px; font-size: 0.9rem; color: #004B87; font-weight: 500; border-left: 4px solid var(--primary-color); }
+    .tab-content { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

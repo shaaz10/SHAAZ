@@ -1,0 +1,307 @@
+<!-- Hero Section -->
+<section class="hero-section">
+    <!-- Background Video -->
+    <video autoplay muted loop playsinline class="hero-video"
+        poster="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop">
+        <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-business-people-walking-in-a-corporate-environment-4286-large.mp4"
+            type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="container hero-content">
+        <!-- Left Side: Main Text -->
+        <div class="hero-left">
+            <div class="hero-text-box">
+                <h1>Protect Your <span>Peace of Mind</span></h1>
+                <p class="hero-subtitle">Comprehensive Event Insurance for when the unexpected happens. Get your quote
+                    in
+                    minutes with The Hartford guarantee.</p>
+
+                <div class="hero-actions">
+                    <a routerLink="/under-construction" class="btn btn-primary btn-large glass-btn">Agentless Policy
+                        Request</a>
+                    <a routerLink="/login" class="btn btn-outline btn-large">Access My Account</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Small Highlight Text -->
+        <div class="hero-right">
+            <div class="trust-widget">
+                <div class="trust-item">
+                    <i class="fa-solid fa-shield-check"></i>
+                    <div>
+                        <strong>Instant Coverage</strong>
+                        <span>Approved in seconds via AI</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fa-solid fa-headset"></i>
+                    <div>
+                        <strong>24/7 Support</strong>
+                        <span>Always on-call for your event</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Banner -->
+<section class="trust-banner">
+    <div class="container">
+        <div class="trust-features">
+            <div class="feature">
+                <div class="feature-icon"><i class="fa-solid fa-award"></i></div>
+                <h3>Top Rated</h3>
+                <p>A+ rating from A.M. Best</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Fast Claims</h3>
+                <p>AI-assisted processing in 24 hours</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Trusted Protection</h3>
+                <p>Covering events nation-wide since 2026</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="container">
+        <div class="section-title">
+            <h2>Easy 3-Step Protection</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h3>Choose Your Plan</h3>
+                <p>Browse our curated insurance products tailored for weddings, corporate events, or private parties.
+                </p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h3>Get Instant Approval</h3>
+                <p>Submit your details and let our AI engine validate your documents in seconds for immediate peace of
+                    mind.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h3>Focus on Your Event</h3>
+                <p>Enjoy your special day knowing you're backed by The Hartford's industry-leading coverage.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container stats-grid">
+        <div class="stat-item">
+            <span class="stat-value">50k+</span>
+            <span class="stat-label">Events Protected</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">₹20Cr+</span>
+            <span class="stat-label">Claims Settled</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">99%</span>
+            <span class="stat-label">Customer Satisfaction</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">24h</span>
+            <span class="stat-label">Avg. Claim Processing</span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Products Section -->
+<section class="products-preview">
+    <div class="container">
+        <div class="section-title">
+            <h2>Insurance Designed for Your Needs</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="carousel-container" *ngIf="products.length > 0; else noProducts">
+            <button class="carousel-control prev" (click)="moveCarousel(-1)" aria-label="Previous">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="product-carousel" #carousel>
+                <div class="card product-card carousel-item" *ngFor="let product of products; let i = index">
+                    <div class="card-image"
+                        [ngStyle]="{'background-image': 'url(' + getImageUrl(product.name, i) + ')'}">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="package-badge">Premium Plan</div>
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description }}</p>
+                        <div class="product-stats">
+                            <div class="stat">
+                                <span class="label">Base Premium</span>
+                                <span class="value">₹{{ product.basePremium | number }}</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Total Coverage</span>
+                                <span class="valueHighlight">₹{{ product.coverageAmount | number }}</span>
+                            </div>
+                        </div>
+                        <a routerLink="/register" class="btn btn-primary btn-block">Get Guaranteed Coverage</a>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control next" (click)="moveCarousel(1)" aria-label="Next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+        <ng-template #noProducts>
+            <!-- Show Sample Premium Plans if DB is empty -->
+            <div class="product-cards">
+                <div class="card product-card">
+                    <div class="card-image"
+                        style="background-image: url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80')">
+                    </div>
+                    <div class="card-body">
+                        <div class="package-badge">Sample Plan</div>
+                        <h3>Wedding Gold</h3>
+                        <p>Comprehensive protection for your big day, covering venue damage and cancellations.</p>
+                        <div class="product-stats">
+                            <div class="stat">
+                                <span class="label">Base Premium</span>
+                                <span class="value">₹5,000</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Total Coverage</span>
+                                <span class="valueHighlight">₹10,00,000</span>
+                            </div>
+                        </div>
+                        <a routerLink="/register" class="btn btn-primary btn-block mt-1">Get Started</a>
+                    </div>
+                </div>
+                <div class="card product-card">
+                    <div class="card-image"
+                        style="background-image: url('https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=800&q=80')">
+                    </div>
+                    <div class="card-body">
+                        <div class="package-badge">Sample Plan</div>
+                        <h3>Corporate Elite</h3>
+                        <p>Elite coverage for high-stakes business conferences and networking events.</p>
+                        <div class="product-stats">
+                            <div class="stat">
+                                <span class="label">Base Premium</span>
+                                <span class="value">₹12,000</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Total Coverage</span>
+                                <span class="valueHighlight">₹50,00,000</span>
+                            </div>
+                        </div>
+                        <a routerLink="/register" class="btn btn-primary btn-block mt-1">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>What Our Customers Say</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    "The Hartford made insuring our 500-person tech conference incredibly easy. Great coverage and
+                    instant approval!"
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+J&background=random" alt="Sarah J"
+                        class="author-img">
+                    <div class="author-info">
+                        <strong>Sarah Jenkins</strong>
+                        <span>Tech Event Organizer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    "When our wedding venue had a last-minute power issue, the claims process was smooth, fast, and
+                    handled with so much empathy. Highly recommended."
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://ui-avatars.com/api/?name=Michael+T&background=random" alt="Michael T"
+                        class="author-img">
+                    <div class="author-info">
+                        <strong>Michael Thompson</strong>
+                        <span>Groom</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    "As a corporate planner, I need reliable insurance. The AI-driven fast claims and simple dashboard
+                    save me hours of paperwork every month."
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://ui-avatars.com/api/?name=Priya+P&background=random" alt="Priya P"
+                        class="author-img">
+                    <div class="author-info">
+                        <strong>Priya Patel</strong>
+                        <span>Corporate Planner</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h3>Is my event covered immediately?</h3>
+                <p>Yes, once your application is approved and payment is processed, your coverage begins instantly.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What documents do I need to provide?</h3>
+                <p>Typically, we require event details, venue contracts, and identification proof. Our AI makes the
+                    upload process seamless.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I file a claim?</h3>
+                <p>Simply log into your dashboard, select your active policy, and click "Raise Claim". You can track the
+                    status in real-time.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I cancel my policy?</h3>
+                <p>Cancellations are possible up to 48 hours before the event start date. Please check the specific
+                    policy terms for details.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+    <div class="container cta-container">
+        <h2>Ready to Secure Your Event?</h2>
+        <p>Talk to an agent today or get an instant quote online.</p>
+        <a routerLink="/register" class="btn btn-primary">Start Your Quote</a>
+    </div>
+</section>

@@ -1,0 +1,397 @@
+<div class="admin-layout">
+      <!-- Premium The Hartford Style Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="brand-text">
+            <span class="brand-title">EventGuard</span>
+            <span class="brand-subtitle">THE HARTFORD</span>
+          </div>
+        </div>
+        <nav class="sidebar-menu">
+          <div class="menu-label">ADMINISTRATION</div>
+          <a (click)="activeTab.set('overview')" [class.active]="activeTab() === 'overview'">
+            <i class="icon fa-solid fa-chart-pie"></i> Platform Overview
+          </a>
+          <a (click)="activeTab.set('requests')" [class.active]="activeTab() === 'requests'">
+            <i class="icon fa-solid fa-inbox"></i> Insurance Requests
+            <span class="badge badge-warning" *ngIf="requests.length">{{requests.length}}</span>
+          </a>
+          <a (click)="activeTab.set('approvals')" [class.active]="activeTab() === 'approvals'">
+            <i class="icon fa-solid fa-scale-balanced"></i> Application Approvals
+          </a>
+          <a (click)="activeTab.set('policies')" [class.active]="activeTab() === 'policies'">
+            <i class="icon fa-solid fa-shield-halved"></i> Active Policies
+          </a>
+          <a (click)="activeTab.set('claims')" [class.active]="activeTab() === 'claims'">
+            <i class="icon fa-solid fa-magnifying-glass"></i> Claims Management
+          </a>
+          <a (click)="activeTab.set('users')" [class.active]="activeTab() === 'users'">
+            <i class="icon fa-solid fa-users-gear"></i> User Management
+          </a>
+          <div class="menu-label" style="margin-top:1.5rem">INSIGHTS</div>
+          <a (click)="activeTab.set('analytics')" [class.active]="activeTab() === 'analytics'">
+            <i class="icon fa-solid fa-chart-line"></i> Analytics
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <div class="topbar-title">
+            <h1 *ngIf="activeTab() === 'overview'">Platform Overview</h1>
+            <h1 *ngIf="activeTab() === 'requests'">Manage Insurance Requests</h1>
+            <h1 *ngIf="activeTab() === 'approvals'">Application Approvals</h1>
+            <h1 *ngIf="activeTab() === 'policies'">Policy & Financials</h1>
+            <h1 *ngIf="activeTab() === 'claims'">Claims Management</h1>
+            <h1 *ngIf="activeTab() === 'users'">User Management</h1>
+            <h1 *ngIf="activeTab() === 'analytics'">Analytics & Reports</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="admin-badge"><i class="fa-solid fa-crown"></i> {{ userName }}</span>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+
+          <!-- TAB: OVERVIEW -->
+          <div *ngIf="activeTab() === 'overview'" class="tab-pane fade-in">
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-icon bg-navy"><i class="fa-solid fa-file-circle-plus"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value">{{ requests.length || 0 }}</div>
+                  <div class="stat-label">Pending Requests</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon bg-red"><i class="fa-solid fa-clipboard-check"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value">{{ approvals.length || 0 }}</div>
+                  <div class="stat-label">Pending Approvals</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon bg-green"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value">{{ policies.length || 0 }}</div>
+                  <div class="stat-label">Active Policies</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon bg-gold"><i class="fa-solid fa-coins"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value">₹{{ totalRevenue | number }}</div>
+                  <div class="stat-label">Total Revenue</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mt-4">
+              <div class="card-header">
+                <h2>Admin Workflow Guide</h2>
+              </div>
+              <div class="card-body">
+                <div class="workflow-steps">
+                  <div class="step">
+                    <div class="step-num">1</div>
+                    <h4>Assign Agents</h4>
+                    <p>Review new incoming customer requests and assign them to available Agents.</p>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">2</div>
+                    <h4>Review Escalations</h4>
+                    <p>Approve applications that have passed AI checks and Agent review.</p>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">3</div>
+                    <h4>Generate Policies</h4>
+                    <p>Convert approved applications into Active Policies and trigger commissions.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: USER MANAGEMENT (Create Agents / Claims Officers) -->
+          <div *ngIf="activeTab() === 'users'" class="tab-pane fade-in">
+            <div class="card">
+              <div class="card-header">
+                <h2>Register Internal Staff</h2>
+              </div>
+              <div class="card-body">
+                <form (ngSubmit)="createUser()" class="staff-registration-form">
+                  <div class="form-group mb-3">
+                    <label>Full Name</label>
+                    <input type="text" [(ngModel)]="newUser.fullName" name="fullName" class="form-control" placeholder="e.g. John Doe" required />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label>Email</label>
+                    <input type="email" [(ngModel)]="newUser.email" name="email" class="form-control" placeholder="john.doe@eventguard.com" required />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label>Phone Number</label>
+                    <input type="text" [(ngModel)]="newUser.phoneNumber" name="phoneNumber" class="form-control" placeholder="1234567890" required />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label>Password</label>
+                    <input type="password" [(ngModel)]="newUser.password" name="password" class="form-control" placeholder="••••••••" required />
+                  </div>
+                  <div class="form-group mb-3">
+                    <label>System Role</label>
+                    <select [(ngModel)]="newUser.roleId" name="roleId" class="form-control" required>
+                      <option [value]="3">Agent (Role 3)</option>
+                      <option [value]="4">Claims Officer (Role 4)</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary" [disabled]="!newUser.fullName || !newUser.email || !newUser.password || !newUser.roleId">
+                    <i class="fa-solid fa-user-plus"></i> Register Staff Member
+                  </button>
+                  <div *ngIf="creationMsg" class="mt-3 alert" [class.alert-success]="!creationErr" [class.alert-error]="creationErr">
+                    {{ creationMsg }}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: REQUESTS (Assign Agents) -->
+          <div *ngIf="activeTab() === 'requests'" class="tab-pane fade-in">
+            <div class="card">
+              <div class="card-header flex-between">
+                <h2>Incoming Customer Requests</h2>
+                <button class="btn btn-outline" (click)="loadRequests()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+              </div>
+              <div class="card-body">
+                <div *ngIf="requests.length === 0" class="empty-state">
+                  <p>No pending insurance requests.</p>
+                </div>
+                <table class="table" *ngIf="requests.length > 0">
+                  <thead>
+                    <tr>
+                      <th>Request</th>
+                      <th>Event Info</th>
+                      <th>Financials & Risks</th>
+                      <th>Status</th>
+                      <th>Assign Agent</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let req of requests">
+                      <td>
+                        <strong>#{{ req.id }}</strong><br>
+                        <small class="text-muted">Cust: #{{ req.customerId }}</small>
+                      </td>
+                      <td>
+                        <strong>{{ req.eventType || 'Event' }}</strong><br>
+                        <small class="text-muted">{{ req.eventLocation || 'N/A' }} | {{ req.eventDate | date:'mediumDate' }}</small>
+                      </td>
+                      <td>
+                        <small><strong>Budget:</strong> ₹{{ req.eventBudget || 0 | number }}</small><br>
+                        <small><strong>Req Cov:</strong> ₹{{ req.coverageRequested || 0 | number }}</small><br>
+                        <small class="text-muted" title="{{ req.riskFactors }}">{{ (req.riskFactors && req.riskFactors.length > 20) ? (req.riskFactors | slice:0:20) + '...' : (req.riskFactors || 'No Risks') }}</small>
+                      </td>
+                      <td><span class="status-badge warning">{{ req.status }}</span></td>
+                      <td class="action-cell">
+                        <select class="form-select mx-1" [(ngModel)]="req.selectedAgent">
+                          <option [ngValue]="undefined">Select Agent...</option>
+                          <option *ngFor="let ag of availableAgents" [value]="ag.id">{{ ag.name }}</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" [disabled]="!req.selectedAgent" (click)="assignAgent(req)">Assign Agent</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: APPROVALS -->
+          <div *ngIf="activeTab() === 'approvals'" class="tab-pane fade-in">
+            <div class="card">
+              <div class="card-header flex-between">
+                <h2>Applications Escalated to Admin</h2>
+                <button class="btn btn-outline" (click)="loadApprovals()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+              </div>
+              <div class="card-body">
+                <div *ngIf="approvals.length === 0" class="empty-state">
+                  <p>No applications pending final approval.</p>
+                </div>
+                <table class="table" *ngIf="approvals.length > 0">
+                  <thead>
+                    <tr><th>App ID</th><th>Customer</th><th>Product</th><th>Coverage/Premium</th><th>Risk</th><th>Status</th><th>Actions</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let app of approvals">
+                      <td><strong>#{{ app.id }}</strong></td>
+                      <td>{{ app.customer?.fullName || 'Customer #' + app.customerId }}</td>
+                      <td>{{ app.policyProduct?.name || 'Product #' + app.policyProductId }}</td>
+                      <td><small><i class="fa-solid fa-shield-halved"></i> ₹{{ app.coverageAmount | number }}<br><i class="fa-solid fa-indian-rupee-sign"></i> ₹{{ app.premiumAmount | number }}</small></td>
+                      <td><strong>{{ app.riskScore || 'N/A' }}</strong> <small class="text-muted">({{ app.riskCategory || '-' }})</small></td>
+                      <td><span class="status-badge purple">{{ app.status }}</span></td>
+                      <td class="action-cell">
+                        <input type="text" class="form-input mx-1" placeholder="Admin Notes..." [(ngModel)]="app.notes">
+                        <button class="btn btn-success btn-sm mx-1" (click)="approveApplication(app)"><i class="fa-solid fa-circle-check"></i> Approve</button>
+                        <button class="btn btn-danger btn-sm" (click)="rejectApplication(app)"><i class="fa-solid fa-xmark"></i> Reject</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: POLICIES & FINANCIALS -->
+          <div *ngIf="activeTab() === 'policies'" class="tab-pane fade-in">
+            <div class="card mb-4">
+              <div class="card-header flex-between">
+                <h2>Approved Applications Awaiting Policy Generation</h2>
+                <button class="btn btn-outline" (click)="loadPendingPolicies()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+              </div>
+              <div class="card-body">
+                <table class="table" *ngIf="pendingPolicies.length > 0">
+                  <thead>
+                    <tr><th>App ID</th><th>Customer</th><th>Product</th><th>Agent</th><th>Coverage</th><th>Premium</th><th>Risk</th><th>Status</th><th>Actions</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let app of pendingPolicies">
+                      <td><strong>#{{ app.id }}</strong></td>
+                      <td>{{ app.customer?.fullName || 'Customer #' + app.customerId }}</td>
+                      <td>{{ app.policyProduct?.name || 'Product #' + app.policyProductId }}</td>
+                      <td>{{ app.agent?.fullName || 'Agent #' + app.agentId }}</td>
+                      <td><strong>₹{{ app.coverageAmount | number }}</strong></td>
+                      <td>₹{{ app.premiumAmount | number }}</td>
+                      <td><strong>{{ app.riskScore || 'N/A' }}</strong> <small class="text-muted">({{ app.riskCategory || '-' }})</small></td>
+                      <td><span class="status-badge success">{{ app.status }}</span></td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" (click)="generatePolicy(app)"><i class="fa-solid fa-shield-halved"></i> Create Active Policy</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="pendingPolicies.length === 0" class="empty-state">
+                  <p>No approved applications ready for policy creation.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header flex-between">
+                <h2>All Active Policies</h2>
+                <button class="btn btn-outline" (click)="loadPolicies()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+              </div>
+              <div class="card-body">
+                <div *ngIf="policies.length === 0" class="empty-state"><p>No active policies yet.</p></div>
+                <table class="table" *ngIf="policies.length > 0">
+                  <thead>
+                    <tr><th>Policy</th><th>Product</th><th>Customer/Event</th><th>Agent</th><th>Coverage</th><th>Premium</th><th>Period</th><th>Status</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let p of policies">
+                      <td><strong>#{{ p.id }}</strong><br><small class="text-muted">{{ p.policyNumber }}</small></td>
+                      <td>{{ p.policyProductName || 'N/A' }}</td>
+                      <td>{{ p.customerName || 'User #' + p.customerId }}<br><small class="text-muted"><i class="fa-regular fa-calendar"></i> {{ p.eventDate | date:'mediumDate' }} @ {{ p.eventLocation }}</small></td>
+                      <td>{{ p.agentName || 'Agent #' + p.agentId }}</td>
+                      <td><strong>₹{{ p.coverageAmount | number }}</strong></td>
+                      <td>₹{{ p.premiumAmount | number }}</td>
+                      <td><small>{{ p.startDate | date:'mediumDate' }}<br>to {{ p.endDate | date:'mediumDate' }}</small></td>
+                      <td><span class="status-badge success">{{ p.status }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: CLAIMS MANAGEMENT -->
+          <div *ngIf="activeTab() === 'claims'" class="tab-pane fade-in">
+            <div class="card mb-4">
+              <div class="card-header flex-between">
+                <h2>Unassigned Claims</h2>
+                <button class="btn btn-outline" (click)="loadClaims()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+              </div>
+              <div class="card-body">
+                <div *ngIf="unassignedClaims.length === 0" class="empty-state">
+                  <p>No unassigned claims.</p>
+                </div>
+                <table class="table" *ngIf="unassignedClaims.length > 0">
+                  <thead>
+                    <tr><th>Claim ID</th><th>Policy</th><th>Customer</th><th>Amount</th><th>Status</th><th>Assign Officer</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let c of unassignedClaims">
+                      <td><strong>#{{ c.id }}</strong></td>
+                      <td>Policy #{{ c.policyId }}</td>
+                      <td>Customer #{{ c.customerId }}</td>
+                      <td><strong>₹{{ c.claimAmount | number }}</strong></td>
+                      <td><span class="status-badge warning">{{ c.status }}</span></td>
+                      <td class="action-cell">
+                        <select class="form-input mx-1" [(ngModel)]="c.selectedOfficer">
+                          <option [ngValue]="undefined">Select Officer...</option>
+                          <option *ngFor="let o of availableOfficers" [ngValue]="o.id">{{ o.name }}</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" [disabled]="!c.selectedOfficer" (click)="assignOfficer(c)">Assign</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header flex-between">
+                <h2>All Claims</h2>
+              </div>
+              <div class="card-body">
+                <div *ngIf="allClaims.length === 0" class="empty-state"><p>No claims yet.</p></div>
+                <table class="table" *ngIf="allClaims.length > 0">
+                  <thead>
+                    <tr><th>Claim ID</th><th>Policy</th><th>Amount</th><th>Fraud Score</th><th>Status</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let c of allClaims">
+                      <td><strong>#{{ c.id }}</strong></td>
+                      <td>Policy #{{ c.policyId }}</td>
+                      <td><strong>₹{{ c.claimAmount | number }}</strong></td>
+                      <td>
+                        <span *ngIf="c.fraudScore">{{c.fraudScore}} <i [class]="c.fraudFlag ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-check'"></i></span>
+                        <span *ngIf="!c.fraudScore" class="text-muted">—</span>
+                      </td>
+                      <td><span class="status-badge" [class.success]="c.status === 'Approved' || c.status === 'Settled'" [class.warning]="c.status === 'UnderReview' || c.status === 'Submitted'" [class.danger]="c.status === 'Rejected'">{{ c.status }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: ANALYTICS -->
+          <div *ngIf="activeTab() === 'analytics'" class="tab-pane fade-in">
+            <div class="analytics-container">
+              <div class="analytics-toolbar">
+                <h2><i class="fa-solid fa-chart-line"></i> Platform Analytics</h2>
+                <div class="chart-selector">
+                  <label>Select Report:</label>
+                  <select [(ngModel)]="selectedChart" (ngModelChange)="onChartChange()" class="form-select chart-dropdown">
+                    <option value="revenue">Revenue by Policy</option>
+                    <option value="claimsStatus">Claims by Status</option>
+                    <option value="coverageDist">Coverage Distribution</option>
+                    <option value="fraudAnalysis">Fraud Analysis</option>
+                    <option value="premiumVsCoverage">Premium vs Coverage</option>
+                    <option value="paymentTimeline">Payment Timeline</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-card">
+                <div class="chart-title">{{ chartTitles[selectedChart] }}</div>
+                <div class="chart-wrapper"><canvas id="adminAnalyticsCanvas"></canvas></div>
+                <div class="chart-summary" *ngIf="chartSummary">{{ chartSummary }}</div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </main>
+    </div>

@@ -1,0 +1,31 @@
+<div class="min-h-screen flex items-center justify-center bg-background px-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden animate-scale-in border border-border">
+        <div class="h-2 w-full bg-gradient-to-r from-amber-500 to-amber-400"></div>
+        <div class="p-8 text-center">
+            <div
+                class="text-amber-100 bg-amber-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-500/30 animate-bounce-in">
+                <i class="fa-solid fa-gears text-5xl"></i>
+            </div>
+            <div class="text-[5rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-gray-200 to-gray-400 mb-2 leading-none"
+                style="font-family:var(--font-heading)">
+                500
+            </div>
+            <h1 class="text-2xl font-extrabold text-primary-dark mb-3" style="font-family:var(--font-heading)">
+                Internal Server Error</h1>
+            <p class="text-text-secondary text-base mb-4 md:mb-6 leading-relaxed">
+                Something went wrong on our end. Our team has been notified and is working on a fix. Please try again
+                later.
+            </p>
+            <div class="flex flex-col gap-3 sm:flex-row justify-center">
+                <a routerLink="/"
+                    class="inline-flex items-center justify-center px-4 md:px-5 py-3 bg-primary text-white font-bold text-sm rounded-xl transition-all duration-300 hover:bg-primary-light hover:shadow-lg hover:-translate-y-0.5 w-full sm:w-auto">
+                    <i class="fa-solid fa-house mr-2"></i> Go to Home
+                </a>
+                <button onclick="location.reload()"
+                    class="inline-flex items-center justify-center px-4 md:px-5 py-3 bg-white text-primary border border-primary/20 font-bold text-sm rounded-xl transition-all duration-300 hover:bg-primary-50 hover:border-primary/40 w-full sm:w-auto">
+                    <i class="fa-solid fa-rotate-right mr-2"></i> Retry
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
