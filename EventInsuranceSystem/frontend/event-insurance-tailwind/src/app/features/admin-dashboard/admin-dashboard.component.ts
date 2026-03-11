@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import { ClaimService } from '../../core/services/claim.service';
+import { AIService } from '../../core/services/ai.service';
+
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -81,6 +83,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
     private auth: AuthService,
     private adminSvc: AdminService,
     private claimSvc: ClaimService,
+    private aiSvc: AIService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -389,6 +392,22 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
         alert('Error assigning officer: ' + (e.error?.message || e.message));
         console.error(e);
       }
+    });
+  }
+
+  enhancingApproval = signal(false);
+  enhanceApprovalNotes(app: any) {
+    if (!app.notes) {
+      alert('Please enter some notes first.');
+      return;
+    }
+    this.enhancingApproval.set(true);
+    this.aiSvc.enhanceText(app.notes).subscribe({
+      next: (res) => {
+        app.notes = res.enhancedText;
+        this.enhancingApproval.set(false);
+      },
+      error: () => this.enhancingApproval.set(false)
     });
   }
 }

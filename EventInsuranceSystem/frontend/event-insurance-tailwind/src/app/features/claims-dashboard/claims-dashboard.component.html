@@ -196,13 +196,17 @@
               <i class="fa-solid fa-robot mr-3"></i>TRIGGER INTEGRITY ANALYSIS
             </button>
 
-            <div class="space-y-2">
-              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">ADJUDICATION
-                FINDINGS</label>
-              <textarea [(ngModel)]="c.notes"
-                class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
-                rows="3" placeholder="Enter findings..."></textarea>
+            <div class="flex justify-between items-center ml-1">
+              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">ADJUDICATION FINDINGS</label>
+              <button (click)="enhanceClaimNotes(c, 'notes')" [disabled]="enhancingClaimNotes() || !c.notes"
+                class="text-[0.6rem] font-black uppercase tracking-widest text-[#004b87] hover:text-[#e2231a] transition-all flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                <i class="fa-solid" [class]="enhancingClaimNotes() ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'"></i>
+                {{ enhancingClaimNotes() ? 'AI' : 'AI ENHANCE' }}
+              </button>
             </div>
+            <textarea [(ngModel)]="c.notes"
+              class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
+              rows="3" placeholder="Enter findings..."></textarea>
 
             <div class="flex gap-4">
               <button
@@ -219,13 +223,17 @@
           </div>
 
           <div *ngIf="c.status === 'Approved'" class="space-y-6">
-            <div class="space-y-2">
-              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">SETTLEMENT
-                PROTOCOL</label>
-              <textarea [(ngModel)]="c.settlementNotes"
-                class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
-                rows="3" placeholder="Enter settlement details..."></textarea>
+            <div class="flex justify-between items-center ml-1">
+              <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">SETTLEMENT PROTOCOL</label>
+              <button (click)="enhanceClaimNotes(c, 'settlement')" [disabled]="enhancingClaimNotes() || !c.settlementNotes"
+                class="text-[0.6rem] font-black uppercase tracking-widest text-[#004b87] hover:text-[#e2231a] transition-all flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                <i class="fa-solid" [class]="enhancingClaimNotes() ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'"></i>
+                {{ enhancingClaimNotes() ? 'AI' : 'AI ENHANCE' }}
+              </button>
             </div>
+            <textarea [(ngModel)]="c.settlementNotes"
+              class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 md:px-5 py-5 text-[0.85rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all resize-none"
+              rows="3" placeholder="Enter settlement details..."></textarea>
             <button
               class="w-full bg-[#001a35] text-white py-5 rounded-2xl font-black text-[0.8rem] uppercase tracking-widest cursor-pointer transition-all hover:bg-[#e2231a] active:scale-95 shadow-2xl border-none"
               [disabled]="loading()" (click)="settle(c)">

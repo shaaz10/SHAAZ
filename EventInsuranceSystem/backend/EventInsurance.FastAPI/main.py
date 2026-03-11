@@ -60,5 +60,51 @@ def detect_fraud():
         "message": f"Document '{filename}' analyzed for fraud anomalies."
     })
 
+@app.route("/enhance-text", methods=["POST"])
+def enhance_text():
+    data = request.get_json()
+    if not data or "text" not in data:
+        return jsonify({"error": "No text provided"}), 400
+    
+    input_text = data["text"]
+    if not input_text.strip():
+        return jsonify({"enhanced_text": ""})
+
+    # Professional Insurance Rephrasing Logic
+    # In a real scenario, this would call Gemini. 
+    # For now, we simulate a professional transformation.
+    prefixes = [
+        "Upon thorough investigation of the circumstances, ",
+        "In accordance with established policy protocols, ",
+        "Based on the clinical evidence and reported incident details, ",
+        "The preliminary assessment indicates that ",
+        "Following a comprehensive review of the indemnity request, "
+    ]
+    suffixes = [
+        " necessitating immediate administrative review.",
+        " which aligns with our comprehensive coverage standards.",
+        " to ensure optimal risk mitigation and resolution.",
+        " for final adjudication and settlement processing.",
+        " in adherence to our integrity and transparency guidelines."
+    ]
+
+    # Simple smart rephraser (Mocking the AI)
+    # If the user input is very short, we expand it. 
+    # If it's long, we refine it.
+    if len(input_text.split()) < 10:
+        enhanced = random.choice(prefixes) + input_text[0].lower() + input_text[1:] + random.choice(suffixes)
+    else:
+        # Just an example of "cleaning up" language
+        enhanced = input_text.replace("i want", "The claimant is requesting") \
+                            .replace("broken", "compromised due to mechanical failure") \
+                            .replace("bad", "suboptimal") \
+                            .replace("help", "provide necessary assistance and resolution")
+        
+    return jsonify({
+        "original_text": input_text,
+        "enhanced_text": enhanced,
+        "model": "Gemini-1.5-Flash (Simulated)"
+    })
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8000, debug=True)

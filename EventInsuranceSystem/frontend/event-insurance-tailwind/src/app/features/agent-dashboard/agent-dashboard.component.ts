@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { AgentService } from '../../core/services/agent.service';
+import { AIService } from '../../core/services/ai.service';
+
 
 @Component({
   selector: 'app-agent-dashboard',
@@ -74,7 +76,7 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked {
     return this.commissions.reduce((sum: number, c: any) => sum + (c.commissionAmount || 0), 0);
   }
 
-  constructor(private auth: AuthService, private agentSvc: AgentService, private cdr: ChangeDetectorRef) { }
+  constructor(private auth: AuthService, private agentSvc: AgentService, private aiSvc: AIService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.loadRequests();
@@ -338,6 +340,22 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked {
       }
       this.agentCurrentChart = new Chart(canvas, config);
       this.cdr.detectChanges();
+    });
+  }
+
+  enhancingNotes = signal(false);
+  enhanceAppNotes(app: any) {
+    if (!app._notes) {
+      alert('Please enter some notes first.');
+      return;
+    }
+    this.enhancingNotes.set(true);
+    this.aiSvc.enhanceText(app._notes).subscribe({
+      next: (res) => {
+        app._notes = res.enhancedText;
+        this.enhancingNotes.set(false);
+      },
+      error: () => this.enhancingNotes.set(false)
     });
   }
 }

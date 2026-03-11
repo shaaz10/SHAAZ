@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ClaimService } from '../../core/services/claim.service';
+import { AIService } from '../../core/services/ai.service';
+
 
 @Component({
   selector: 'app-claims-dashboard',
@@ -62,7 +64,7 @@ export class ClaimsDashboardComponent implements OnInit, AfterViewChecked {
 
   get userName() { return this.auth.currentUserValue?.email || 'ClaimsOfficer'; }
 
-  constructor(private auth: AuthService, private claimSvc: ClaimService, private cdr: ChangeDetectorRef) { }
+  constructor(private auth: AuthService, private claimSvc: ClaimService, private aiSvc: AIService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() { this.loadMyClaims(); this.loadAllClaims(); }
 
@@ -177,6 +179,24 @@ export class ClaimsDashboardComponent implements OnInit, AfterViewChecked {
       }
       this.clmCurrentChart = new Chart(canvas, config);
       this.cdr.detectChanges();
+    });
+  }
+
+  enhancingClaimNotes = signal(false);
+  enhanceClaimNotes(c: any, field: string) {
+    const textToEnhance = field === 'notes' ? c.notes : c.settlementNotes;
+    if (!textToEnhance) {
+      alert('Please enter some text first.');
+      return;
+    }
+    this.enhancingClaimNotes.set(true);
+    this.aiSvc.enhanceText(textToEnhance).subscribe({
+      next: (res) => {
+        if (field === 'notes') c.notes = res.enhancedText;
+        else c.settlementNotes = res.enhancedText;
+        this.enhancingClaimNotes.set(false);
+      },
+      error: () => this.enhancingClaimNotes.set(false)
     });
   }
 }

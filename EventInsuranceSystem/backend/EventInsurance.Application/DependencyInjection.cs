@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: DependencyInjection.cs
 // Layer: EventInsurance.Application
 // Description: Component representing DependencyInjection functionality within the system.
@@ -35,6 +35,7 @@ namespace EventInsurance.Application
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IClaimService, ClaimService>();
             services.AddScoped<IAIFraudDetectionService, AIFraudDetectionService>();
+            services.AddScoped<IAITextService, AITextService>();
             services.AddScoped<INotificationService, NotificationService>();
 
             return services;

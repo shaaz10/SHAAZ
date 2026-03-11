@@ -495,6 +495,9 @@
               Premium Attribution
             </th>
             <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
+              Decision Remarks
+            </th>
+            <th class="px-4 py-3 md:px-5 md:py-4 text-[#001a35] text-[0.75rem] font-black uppercase tracking-[2px]">
               Adjudication</th>
           </tr>
         </thead>
@@ -518,6 +521,19 @@
                   class="fa-solid fa-indian-rupee-sign absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[0.8rem]"></i>
                 <input type="number" [(ngModel)]="app.premiumAmount"
                   class="w-full bg-slate-50 border-2 border-transparent rounded-xl pl-10 pr-3 py-2 text-[0.95rem] font-black text-[#e2231a] outline-none focus:bg-white focus:border-[#004b87]/20 transition-all shadow-inner">
+              </div>
+            </td>
+            <td class="px-4 py-3 md:px-5 md:py-4">
+              <div class="space-y-2 min-w-[200px]">
+                <div class="flex justify-between items-center">
+                  <label class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest">Decision Notes</label>
+                  <button (click)="enhanceApprovalNotes(app)" [disabled]="enhancingApproval() || !app.notes"
+                    class="text-[0.55rem] font-black text-[#004b87] hover:text-[#e2231a] transition-all">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI
+                  </button>
+                </div>
+                <input type="text" [(ngModel)]="app.notes" placeholder="Final adjudication notes..."
+                  class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-3 py-2 text-[0.8rem] font-medium text-[#001a35] outline-none focus:bg-white focus:border-[#004b87]/10 transition-all">
               </div>
             </td>
             <td class="px-4 py-3 md:px-5 md:py-4">

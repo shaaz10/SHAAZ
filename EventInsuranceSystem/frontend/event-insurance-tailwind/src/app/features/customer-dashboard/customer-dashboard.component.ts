@@ -11,6 +11,8 @@ import { InsuranceRequestService } from '../../core/services/insurance-request.s
 import { ActivePolicyService } from '../../core/services/active-policy.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { ClaimService } from '../../core/services/claim.service';
+import { AIService } from '../../core/services/ai.service';
+
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -103,6 +105,7 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
     private policySvc: ActivePolicyService,
     private paymentSvc: PaymentService,
     private claimSvc: ClaimService,
+    private aiSvc: AIService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient
   ) {
@@ -504,6 +507,25 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
         this.payMsg.set('❌ ' + (e.error?.message || 'Payment failed.'));
         this.payErr.set(true);
         this.cdr.detectChanges();
+      }
+    });
+  }
+
+  enhancingDescription = signal(false);
+  enhanceClaimDescription() {
+    if (!this.claimForm.description) {
+      alert('Please enter some text first.');
+      return;
+    }
+    this.enhancingDescription.set(true);
+    this.aiSvc.enhanceText(this.claimForm.description).subscribe({
+      next: (res) => {
+        this.claimForm.description = res.enhancedText;
+        this.enhancingDescription.set(false);
+      },
+      error: () => {
+        this.enhancingDescription.set(false);
+        alert('AI service is currently unavailable. Using manual entry.');
       }
     });
   }

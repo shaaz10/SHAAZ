@@ -1,4 +1,4 @@
-﻿<div class="flex min-h-screen bg-[#f8fafc] font-sans">
+<div class="flex min-h-screen bg-[#f8fafc] font-sans">
   <!-- Mobile Menu Backdrop -->
   @if (isSidebarOpen()) {
   <div (click)="toggleSidebar()"
@@ -972,10 +972,14 @@
           </div>
 
           <div class="space-y-2 md:col-span-2 text-left">
-            <label
-              class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1 text-left">Incident
-              Narrative
-              & Context</label>
+            <div class="flex justify-between items-center ml-1">
+              <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider">Incident Narrative & Context</label>
+              <button (click)="enhanceClaimDescription()" [disabled]="enhancingDescription() || !claimForm.description"
+                class="text-[0.6rem] font-black uppercase tracking-widest text-[#004b87] hover:text-[#e2231a] transition-colors flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                <i class="fa-solid" [class]="enhancingDescription() ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'"></i>
+                {{ enhancingDescription() ? 'ENHANCING...' : 'AI ENHANCE' }}
+              </button>
+            </div>
             <textarea [(ngModel)]="claimForm.description" rows="4"
               placeholder="Provide a detailed log of the trigger event..."
               class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-xl text-[0.95rem] font-medium outline-none transition-all focus:bg-white focus:border-[#004b87]/20 min-h-[140px]"></textarea>
