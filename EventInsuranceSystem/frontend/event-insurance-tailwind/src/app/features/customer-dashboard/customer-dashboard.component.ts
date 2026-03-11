@@ -663,4 +663,63 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
       this.cdr.detectChanges();
     });
   }
+
+  // ============================================================
+  // ENTERPRISE UI HELPERS (Lifecycle Timeline, Risk Gauge, Docs)
+  // ============================================================
+
+  /** Maps application status to the visual lifecycle pipeline */
+  getLifecycleSteps(status: string) {
+    const progression = [
+      'Submitted', 'AgentAssigned', 'PolicySuggested', 'PendingValidation', 'UnderReview', 'AgentApproved', 'Approved', 'Active'
+    ];
+    const steps = [
+      { key: 'Submitted',         label: 'Request\nSubmitted',   icon: 'fa-paper-plane'    },
+      { key: 'AgentAssigned',     label: 'Agent\nAssigned',      icon: 'fa-user-tie'       },
+      { key: 'PendingValidation', label: 'Docs\nUploaded',       icon: 'fa-file-arrow-up'  },
+      { key: 'UnderReview',       label: 'Under\nReview',        icon: 'fa-magnifying-glass'},
+      { key: 'AgentApproved',     label: 'Agent\nApproved',      icon: 'fa-circle-check'   },
+      { key: 'Approved',          label: 'Admin\nCleared',       icon: 'fa-award'          },
+      { key: 'Active',            label: 'Policy\nIssued',       icon: 'fa-shield-halved'  },
+    ];
+    const currentIdx = progression.indexOf(status);
+    return steps.map((s, i) => ({
+      ...s,
+      state: currentIdx > i ? 'done' : currentIdx === i ? 'active' : 'upcoming'
+    }));
+  }
+
+  /** Returns the progress bar width percentage for the gradient line */
+  getLifecycleProgress(status: string): number {
+    const map: any = {
+      'Submitted': 4,
+      'AgentAssigned': 18,
+      'PolicySuggested': 18,
+      'PendingValidation': 35,
+      'UnderReview': 51,
+      'AgentApproved': 68,
+      'Approved': 84,
+      'Active': 100,
+    };
+    return map[status] ?? 0;
+  }
+
+  /** Derives individual risk factor bars from the aggregate riskScore */
+  getRiskFactors(app: any): { label: string; pct: number }[] {
+    const base = app.riskScore || 50;
+    const attendees = app.estimatedAttendees || 200;
+    const budget    = app.eventBudget || 100000;
+
+    const venuePct    = Math.min(100, Math.round(base * 0.9  + (attendees > 1000 ? 15 : 0)));
+    const crowdPct    = Math.min(100, Math.round(base * 0.75 + (attendees > 500  ? 10 : 0)));
+    const weatherPct  = Math.min(100, Math.round(base * 0.6));
+    const financialPct = Math.min(100, Math.round((budget / 500000) * 60 + base * 0.3));
+
+    return [
+      { label: 'Venue Risk',       pct: venuePct    },
+      { label: 'Crowd Density',    pct: crowdPct    },
+      { label: 'Weather Exposure', pct: weatherPct  },
+      { label: 'Financial Scale',  pct: financialPct },
+    ];
+  }
 }
