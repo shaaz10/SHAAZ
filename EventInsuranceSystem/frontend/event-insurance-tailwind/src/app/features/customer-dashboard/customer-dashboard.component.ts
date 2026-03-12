@@ -22,6 +22,7 @@ import { AIService } from '../../core/services/ai.service';
   styleUrl: './customer-dashboard.component.css'
 })
 export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
+  Math = Math;
   tab = signal('overview');
   isSidebarOpen = signal(false);
   private custChartsRendered = false;
@@ -461,11 +462,20 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
     return this.policies.some(p => p.applicationId === applicationId);
   }
 
+  payInstallments = 1;
+
   openPayment(policy: any) {
     this.payingPolicy = policy;
-    this.paymentAmount = policy.premiumAmount;
+    this.payInstallments = 1;
+    this.paymentAmount = policy.installmentAmount > 0 ? policy.installmentAmount : policy.premiumAmount;
     this.paymentRef = 'TXN-' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
     this.payMsg.set('');
+  }
+
+  updatePaymentAmount() {
+    if (this.payingPolicy.installmentAmount > 0) {
+      this.paymentAmount = this.payingPolicy.installmentAmount * this.payInstallments;
+    }
   }
 
   openClaimForPolicy(policy: any) {
@@ -480,11 +490,8 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
     this.payMsg.set('');
     this.payErr.set(false);
 
-    // Ensure they are paying exactly the premium amount
-    this.paymentAmount = this.payingPolicy.premiumAmount;
-
     if (this.paymentAmount <= 0) {
-      this.payMsg.set('❌ Please enter a proper payment amount (greater than zero).');
+      this.payMsg.set('❌ Please enter a proper payment amount.');
       this.payErr.set(true);
       return;
     }
@@ -495,11 +502,16 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
       return;
     }
 
-    this.paymentSvc.makePayment({ policyId: this.payingPolicy.id, amount: this.paymentAmount, transactionReference: this.paymentRef }).subscribe({
+    this.paymentSvc.makePayment({ 
+      policyId: this.payingPolicy.id, 
+      amount: this.paymentAmount, 
+      transactionReference: this.paymentRef 
+    }).subscribe({
       next: r => {
-        this.payMsg.set('✅ Payment of ₹' + this.paymentAmount + ' successful!');
+        this.payMsg.set('✅ Payment successful! Coverage advanced.');
         this.payErr.set(false);
         this.payments.push(r);
+        this.loadPolicies(); // Refresh policy stats (installmentPaid, nextDueDate)
         setTimeout(() => this.payingPolicy = null, 2000);
         this.cdr.detectChanges();
       },
@@ -730,7 +742,9 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
   calculatePremium(data: any) {
     const riskScore   = data.riskScore   || 50;
     const eventBudget = data.eventBudget || 100000;
-    const coverageReq = data.coverageRequested > 0 ? data.coverageRequested : eventBudget * 1.5;
+    
+    // If the data has a 'coverageAmount' (like an Application has), it must strictly override the requested amount.
+    const coverageReq = data.coverageAmount > 0 ? data.coverageAmount : (data.coverageRequested > 0 ? data.coverageRequested : eventBudget * 1.5);
     const attendees   = data.estimatedAttendees || 200;
     const eventType   = data.eventType || '';
 
@@ -753,14 +767,22 @@ export class CustomerDashboardComponent implements OnInit, AfterViewChecked {
     const crowdPct   = attendees > 1000 ? 30 : attendees > 500 ? 15 : 0;
     const crowdAddon = Math.round(basePremium * crowdPct / 100);
 
-    const finalPremium = Math.round(basePremium) + riskAddon + eventAddon + crowdAddon;
+    const calculatedPremium = Math.round(basePremium) + riskAddon + eventAddon + crowdAddon;
+    
+    // If we have a bound premium (e.g. from an Application), use it. 
+    // Otherwise, use the live calculation.
+    const finalPremium = data.premiumAmount > 0 ? data.premiumAmount : calculatedPremium;
+    const manualAdjustment = finalPremium - calculatedPremium;
 
     return {
       baseCoverage, basePremium: Math.round(basePremium),
       riskScore, riskPct, riskAddon,
       eventType, eventPct, eventAddon,
       attendees, crowdPct, crowdAddon,
+      calculatedPremium,
       finalPremium,
+      manualAdjustment,
+      isOverride: Math.abs(manualAdjustment) > 1, // Using 1 to account for rounding noise
       riskLabel: riskScore >= 70 ? 'HIGH RISK' : riskScore >= 40 ? 'MEDIUM RISK' : 'LOW RISK',
       riskColor: riskScore >= 70 ? 'text-red-500' : riskScore >= 40 ? 'text-amber-500' : 'text-emerald-500',
     };

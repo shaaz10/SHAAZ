@@ -84,4 +84,24 @@ export class AdminService {
     createUser(dto: { fullName: string; email: string; password: string; phoneNumber: string; roleId: number }) {
         return this.http.post(`${this.api}/auth/create-user`, dto);
     }
+
+    // ==========================================
+    // POLICY PRODUCTS MANAGEMENT
+    // ==========================================
+
+    getProducts() {
+        return this.http.get<any[]>(`${this.api}/policyproduct`);
+    }
+
+    createProduct(product: any) {
+        return this.http.post<any>(`${this.api}/policyproduct`, product);
+    }
+
+    updateProduct(id: number, product: any) {
+        return this.http.put<any>(`${this.api}/policyproduct/${id}`, product);
+    }
+
+    deleteProduct(id: number) {
+        return this.http.delete<any>(`${this.api}/policyproduct/${id}`);
+    }
 }

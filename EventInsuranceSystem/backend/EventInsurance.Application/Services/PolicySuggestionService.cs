@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: PolicySuggestionService.cs
 // Layer: EventInsurance.Application
 // Description: Application Service containing the core business logic and orchestration for PolicySuggestionService.
@@ -50,14 +50,16 @@ namespace EventInsurance.Application.Services
                     PolicyName = s.PolicyProduct.Name,
                     PolicyDescription = s.PolicyProduct.Description,
                     BasePremium = s.PolicyProduct.BasePremium,
-                    CoverageAmount = s.PolicyProduct.CoverageAmount
+                    CoverageAmount = s.PolicyProduct.CoverageAmount,
+                    CustomCoverageAmount = s.CustomCoverageAmount
                 });
         }
         public async Task SuggestPolicyAsync(
             int agentId,
             int requestId,
             int policyProductId,
-            decimal suggestedPremium)
+            decimal suggestedPremium,
+            decimal? customCoverageAmount = null)
         {
             // --- VALIDATION LOGIC ---
             // 1. Ensure the premium is a positive value
@@ -79,6 +81,7 @@ namespace EventInsurance.Application.Services
                 PolicyProductId = policyProductId,
                 SuggestedByAgentId = agentId,
                 SuggestedPremium = suggestedPremium,
+                CustomCoverageAmount = customCoverageAmount,
                 Status = SuggestionStatus.Pending,
                 CreatedAt = DateTime.UtcNow
             };

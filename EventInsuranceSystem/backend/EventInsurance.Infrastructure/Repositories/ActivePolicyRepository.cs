@@ -26,6 +26,12 @@ namespace EventInsurance.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(ActivePolicy policy)
+        {
+            _context.ActivePolicies.Update(policy);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<ActivePolicy?> GetByIdAsync(int id)
         {
             return await _context.ActivePolicies

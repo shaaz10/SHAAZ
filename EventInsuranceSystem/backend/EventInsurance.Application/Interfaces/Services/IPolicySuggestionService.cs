@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: IPolicySuggestionService.cs
 // Layer: EventInsurance.Application
 // Description: Service Interface defining business logic contracts for IPolicySuggestionService.
@@ -22,7 +22,8 @@ namespace EventInsurance.Application.Interfaces.Services
             int agentId,
             int requestId,
             int policyProductId,
-            decimal suggestedPremium);
+            decimal suggestedPremium,
+            decimal? customCoverageAmount = null);
         Task<IEnumerable<PolicySuggestionResponseDto>>
      GetSuggestionsByRequestIdAsync(int requestId);
         

@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: PolicySuggestion.cs
 // Layer: EventInsurance.Domain
 // Description: Domain Entity representing a core business concept and database table structure for PolicySuggestion.
@@ -27,6 +27,7 @@ namespace EventInsurance.Domain.Entities
         public User SuggestedByAgent { get; set; }
 
         public decimal SuggestedPremium { get; set; }
+        public decimal? CustomCoverageAmount { get; set; }
 
         public SuggestionStatus Status { get; set; }  // Suggested / SelectedByCustomer / Rejected
     }

@@ -25,6 +25,7 @@ namespace EventInsurance.Application.Services
 
         // Commission rate: 10% of the premium amount
         private const decimal CommissionRate = 0.10m;
+        private const int DefaultInstallmentCount = 12;
 
         public ActivePolicyService(
             IActivePolicyRepository activePolicyRepo,
@@ -38,43 +39,35 @@ namespace EventInsurance.Application.Services
             _notificationService = notificationService;
         }
 
-        /// <summary>
-        /// Orchestrates the transformation of an approved application into an active insurance policy.
-        /// This involves creating the policy record, generating a unique policy number, and auto-calculating agent commission.
-        /// </summary>
         public async Task<ActivePolicyResponseDto> CreateActivePolicyAsync(int applicationId)
         {
-            // 1. Retrieve the detailed application record ensuring all necessary associations (Customer, Agent, Product) are loaded
             var application = await _applicationRepo.GetByIdWithDetailsAsync(applicationId);
 
             if (application == null)
                 throw new Exception($"Application {applicationId} not found.");
 
-            // 2. State Guard: Only applications that have passed all approval checks (AI & Manual) can be activated
             if (application.Status != PolicyApplicationStatus.Approved)
                 throw new Exception(
                     $"Cannot create policy. Application status is '{application.Status}'. " +
                     $"Only 'Approved' applications can become active policies.");
 
-            // 3. Idempotency Check: Prevent duplicate active policies for the same application ID
             var existing = await _activePolicyRepo.GetByApplicationIdAsync(applicationId);
             if (existing != null)
                 throw new Exception(
                     $"An active policy already exists for application {applicationId}. " +
                     $"Policy Number: {existing.PolicyNumber}");
 
-            // 4. Algorithmically generate a traceable unique Policy Number
             var policyNumber = GeneratePolicyNumber(applicationId);
 
-            // 5. Establish the coverage period (Current standard: 365 days from activation)
             var startDate = DateTime.UtcNow.Date;
             var endDate = startDate.AddYears(1);
 
-            // 6. Finalize financial values from the approved contract stage
             var premiumAmount = application.PremiumAmount;
             var coverageAmount = application.CoverageAmount;
 
-            // 7. Instantiate the core ActivePolicy domain model
+            // Calculate installment values
+            var installmentAmount = Math.Round(premiumAmount / DefaultInstallmentCount, 2);
+
             var activePolicy = new ActivePolicy
             {
                 PolicyNumber = policyNumber,
@@ -86,52 +79,33 @@ namespace EventInsurance.Application.Services
                 StartDate = startDate,
                 EndDate = endDate,
                 Status = PolicyStatus.Active,
-                RenewalReminderDate = endDate.AddDays(-30), // Trigger reminder logic one month prior to expiration
-                CreatedAt = DateTime.UtcNow
+                RenewalReminderDate = endDate.AddDays(-30),
+                CreatedAt = DateTime.UtcNow,
+                
+                // --- Installment System ---
+                TotalInstallments = DefaultInstallmentCount,
+                InstallmentAmount = installmentAmount,
+                InstallmentsPaid = 0,
+                NextPaymentDueDate = startDate.AddMonths(1) // First payment due in 1 month
             };
 
-            // 8. Commit the ActivePolicy to the database repository
             await _activePolicyRepo.AddAsync(activePolicy);
 
-            // ── STEP 10: Automatic Agent Commission Protocol ─────────────────
-            // Calculates the earnings for the agent based on the established Premium and CommissionRate constant
             var commissionAmount = Math.Round(premiumAmount * CommissionRate, 2);
             var commission = new AgentCommission
             {
                 AgentId = application.AgentId,
                 PolicyId = activePolicy.Id,
                 CommissionAmount = commissionAmount,
-                IsPaid = false, // Record remains unpaid until processed by finance/claims officer
+                IsPaid = false,
                 CreatedAt = DateTime.UtcNow
             };
             await _commissionRepo.AddAsync(commission);
-            // ─────────────────────────────────────────────────────────────────
 
-            // Dispatch real-time notifications to stakeholders about the successful activation
             await _notificationService.CreateNotificationAsync(application.CustomerId, "Policy Activated!", $"Your policy {policyNumber} is now officially active.");
             await _notificationService.CreateNotificationAsync(application.AgentId, "New Commission Earned!", $"You earned a commission of {commissionAmount:C} for policy {policyNumber}.");
 
-            // 9. Format and return the final response DTO with all calculated metadata
-            return new ActivePolicyResponseDto
-            {
-                Id = activePolicy.Id,
-                PolicyNumber = activePolicy.PolicyNumber,
-                ApplicationId = applicationId,
-                CustomerId = application.CustomerId,
-                CustomerName = application.Customer?.FullName ?? string.Empty,
-                AgentId = application.AgentId,
-                AgentName = application.Agent?.FullName ?? string.Empty,
-                PolicyProductName = application.PolicyProduct?.Name ?? string.Empty,
-                PremiumAmount = premiumAmount,
-                CoverageAmount = coverageAmount,
-                EventDate = application.Request?.EventDate,
-                EventLocation = application.Request?.EventLocation ?? string.Empty,
-                StartDate = startDate,
-                EndDate = endDate,
-                Status = "Active",
-                CreatedAt = activePolicy.CreatedAt,
-                Message = $"Active policy created. Commission of {commissionAmount:C} generated for agent."
-            };
+            return MapToDto(activePolicy);
         }
 
         public async Task<ActivePolicyResponseDto?> GetByIdAsync(int id)
@@ -158,8 +132,6 @@ namespace EventInsurance.Application.Services
             var policies = await _activePolicyRepo.GetAllAsync();
             return policies.Select(MapToDto);
         }
-
-        // ── Private helpers ───────────────────────────────────────────────────
 
         private static string GeneratePolicyNumber(int applicationId)
         {
@@ -188,7 +160,13 @@ namespace EventInsurance.Application.Services
                 EndDate = p.EndDate,
                 Status = p.Status.ToString(),
                 CreatedAt = p.CreatedAt,
-                Message = string.Empty
+                Message = string.Empty,
+                
+                // --- Installment System ---
+                TotalInstallments = p.TotalInstallments,
+                InstallmentAmount = p.InstallmentAmount,
+                InstallmentsPaid = p.InstallmentsPaid,
+                NextPaymentDueDate = p.NextPaymentDueDate
             };
         }
     }

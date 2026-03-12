@@ -618,7 +618,7 @@
                       </div>
                       <div>
                         <p class="text-[0.55rem] font-black uppercase tracking-widest text-slate-400 mb-0.5">Limit</p>
-                        <p class="text-[#004b87] font-black text-sm m-0">₹{{s.coverageAmount | number}}</p>
+                        <p class="text-[#004b87] font-black text-sm m-0">₹{{(s.customCoverageAmount || s.coverageAmount) | number}}</p>
                       </div>
                     </div>
                     @if (s.status === 'Pending') {
@@ -749,7 +749,7 @@
                 <!-- Hero strip -->
                 <div class="bg-gradient-to-r from-[#001a35] to-[#004b87] px-5 py-4 flex items-center justify-between">
                   <div>
-                    <p class="text-[0.5rem] font-black uppercase tracking-[3px] text-white/50 mb-0.5">AI PREMIUM ESTIMATE</p>
+                    <p class="text-[0.5rem] font-black uppercase tracking-[3px] text-white/50 mb-0.5">{{ calc.isOverride ? 'APPLIED PREMIUM' : 'AI PREMIUM ESTIMATE' }}</p>
                     <p class="text-2xl font-black text-white font-heading leading-none">₹{{ calc.finalPremium | number }}</p>
                   </div>
                   <div class="text-right">
@@ -775,9 +775,13 @@
                     <span class="text-[0.7rem] font-bold text-slate-500">{{ calc.eventType || 'Event' }} Factor (+{{ calc.eventPct }}%)</span>
                     <span class="text-[0.8rem] font-black text-indigo-600">+₹{{ calc.eventAddon | number }}</span>
                   </div>
-                  <div class="flex justify-between items-center px-5 py-2.5">
+                  <div class="flex justify-between items-center px-5 py-2.5 border-b border-slate-50">
                     <span class="text-[0.7rem] font-bold text-slate-500">Crowd ({{ calc.attendees | number }} pax, +{{ calc.crowdPct }}%)</span>
                     <span class="text-[0.8rem] font-black text-orange-500">+₹{{ calc.crowdAddon | number }}</span>
+                  </div>
+                  <div *ngIf="calc.isOverride" class="flex justify-between items-center px-5 py-2.5 bg-amber-50/50">
+                    <span class="text-[0.7rem] font-bold text-amber-700 italic">Manual Adjustment (Agent)</span>
+                    <span class="text-[0.8rem] font-black text-amber-900">{{ calc.manualAdjustment > 0 ? '+' : '' }}₹{{ calc.manualAdjustment | number }}</span>
                   </div>
                 </div>
               </div>
@@ -947,13 +951,32 @@
                 <span class="text-[#001a35] font-black">₹{{p.coverageAmount | number}}</span>
               </div>
               <div class="flex justify-between items-center text-[0.8rem]">
-                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Annual Premium</span>
-                <span class="text-[#001a35] font-black">₹{{p.premiumAmount | number}}</span>
+                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Installment Paid</span>
+                <span class="text-[#001a35] font-black">{{p.installmentsPaid}} / {{p.totalInstallments}} Months</span>
               </div>
               <div class="flex justify-between items-center text-[0.8rem]">
-                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Lifecycle Term</span>
-                <span class="text-[#001a35] font-black">{{p.startDate | date:'mediumDate'}} — {{p.endDate |
-                  date:'mediumDate'}}</span>
+                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Amt per Month</span>
+                <span class="text-[#001a35] font-black">₹{{p.installmentAmount | number}}</span>
+              </div>
+              <div class="flex justify-between items-center text-[0.8rem]">
+                <span class="text-slate-400 font-black uppercase tracking-widest text-[0.6rem]">Next Due Date</span>
+                <span class="text-[#e2231a] font-black">{{p.nextPaymentDueDate | date:'MMM dd, yyyy'}}</span>
+              </div>
+
+              <!-- Installment Timeline -->
+              <div class="pt-4 border-t border-slate-50">
+                <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-3">Installment Timeline</p>
+                <div class="flex gap-1.5 h-1.5 w-full">
+                  @for (i of [].constructor(p.totalInstallments); track $index) {
+                    <div class="h-full flex-1 rounded-full" 
+                         [class]="$index < p.installmentsPaid ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]' : 'bg-slate-100'">
+                    </div>
+                  }
+                </div>
+                <div class="flex justify-between mt-2">
+                  <span class="text-[0.55rem] font-bold text-slate-400 italic">Policy Start</span>
+                  <span class="text-[0.55rem] font-bold text-slate-400 italic">Term End</span>
+                </div>
               </div>
             </div>
 
@@ -1247,12 +1270,25 @@
         </div>
 
         <div class="space-y-6 text-left">
+          @if (payingPolicy.installmentAmount > 0) {
+            <div class="space-y-2">
+              <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Pay for Months</label>
+              <div class="flex items-center gap-4 bg-slate-50 p-2 rounded-2xl border border-slate-100">
+                <button (click)="payInstallments = Math.max(1, payInstallments - 1); updatePaymentAmount()" 
+                  class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#001a35] hover:bg-[#e2231a] hover:text-white transition-all border-none cursor-pointer">-</button>
+                <div class="flex-1 text-center font-black text-lg text-[#001a35]">{{ payInstallments }} Month(s)</div>
+                <button (click)="payInstallments = Math.min(payingPolicy.totalInstallments - payingPolicy.installmentsPaid, payInstallments + 1); updatePaymentAmount()"
+                  class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#001a35] hover:bg-[#e2231a] hover:text-white transition-all border-none cursor-pointer">+</button>
+              </div>
+            </div>
+          }
+
           <div class="space-y-2">
-            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Sum-Certain
-              Amount (₹)</label>
-            <input type="number" [(ngModel)]="paymentAmount"
-              class="w-full px-4 md:px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-[1.1rem] font-black text-[#001a35] outline-none"
-              readonly />
+            <label class="block text-[0.75rem] font-black text-[#001a35] uppercase tracking-wider ml-1">Total Payment (₹)</label>
+            <div class="w-full px-4 md:px-5 py-5 bg-gradient-to-br from-[#001a35] to-[#004b87] rounded-2xl text-2xl font-black text-white shadow-lg flex items-center justify-between">
+              <span>₹{{ paymentAmount | number }}</span>
+              <span class="text-[0.65rem] font-bold text-white/50 uppercase tracking-widest">Digital Settlement</span>
+            </div>
           </div>
 
           <div class="space-y-2">
@@ -1263,7 +1299,7 @@
               placeholder="e.g. TXN998877" />
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-4 pt-6">
+          <div class="flex flex-col sm:flex-row gap-4 pt-4">
             <button
               class="w-full sm:flex-1 bg-[#001a35] text-white py-4 sm:py-5 rounded-2xl font-black text-[0.75rem] sm:text-sm uppercase tracking-widest shadow-xl shadow-[#001a35]/20 hover:shadow-[#001a35]/40 hover:-translate-y-1 transition-all border-none cursor-pointer disabled:opacity-50"
               [disabled]="submitting() || !paymentRef" (click)="makePayment()">{{ submitting() ? 'PROCESSING...' :

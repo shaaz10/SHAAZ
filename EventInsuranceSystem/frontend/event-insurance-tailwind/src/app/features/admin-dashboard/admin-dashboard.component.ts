@@ -26,6 +26,8 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
   approvals: any[] = [];
   pendingPolicies: any[] = []; // Approved Applications waiting for Policy creation
   policies: any[] = [];
+  policyProducts: any[] = []; // Policy Products
+
   payments: any[] = [];
   commissions: any[] = [];
 
@@ -34,6 +36,12 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
   availableOfficers: any[] = [];
   allClaims: any[] = [];
   unassignedClaims: any[] = [];
+
+  // Product Modal State
+  showProductModal = false;
+  isEditingProduct = false;
+  currentProduct: any = { name: '', description: '', basePremium: 0, coverageAmount: 0 };
+
 
   // Filter & Search Properties
   filterTerm = '';
@@ -113,6 +121,9 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
       next: r => { this.payments = r.sort((a: any, b: any) => b.id - a.id); this.cdr.detectChanges(); },
       error: () => { console.warn('Payments API missing, skipping'); }
     });
+
+    this.loadPolicyProducts();
+
   }
 
   loadRequests() {
@@ -238,6 +249,69 @@ export class AdminDashboardComponent implements OnInit, AfterViewChecked {
         this.creationErr = true;
       }
     });
+  }
+
+  // ============== POLICY PRODUCTS MANAGEMENT ==============
+  loadPolicyProducts() {
+    this.adminSvc.getProducts().subscribe({
+      next: res => { this.policyProducts = res; this.cdr.detectChanges(); },
+      error: () => { console.warn('Failed to load policy products'); }
+    });
+  }
+
+  openProductModal(product?: any) {
+    if (product) {
+      this.isEditingProduct = true;
+      this.currentProduct = { ...product };
+    } else {
+      this.isEditingProduct = false;
+      this.currentProduct = { name: '', description: '', basePremium: 0, coverageAmount: 0 };
+    }
+    this.showProductModal = true;
+  }
+
+  closeProductModal() {
+    this.showProductModal = false;
+    this.currentProduct = { name: '', description: '', basePremium: 0, coverageAmount: 0 };
+  }
+
+  saveProduct() {
+    if (!this.currentProduct.name || this.currentProduct.basePremium <= 0 || this.currentProduct.coverageAmount <= 0) {
+      alert('Please fill out all required fields with valid amounts.');
+      return;
+    }
+
+    if (this.isEditingProduct) {
+      this.adminSvc.updateProduct(this.currentProduct.id, this.currentProduct).subscribe({
+        next: () => {
+          alert('Product updated successfully!');
+          this.loadPolicyProducts();
+          this.closeProductModal();
+        },
+        error: () => alert('Failed to update product.')
+      });
+    } else {
+      this.adminSvc.createProduct(this.currentProduct).subscribe({
+        next: () => {
+          alert('Product created successfully!');
+          this.loadPolicyProducts();
+          this.closeProductModal();
+        },
+        error: () => alert('Failed to create product.')
+      });
+    }
+  }
+
+  deleteProduct(id: number) {
+    if (confirm('Are you sure you want to deactivate this product?')) {
+      this.adminSvc.deleteProduct(id).subscribe({
+        next: () => {
+          alert('Product deactivated successfully.');
+          this.loadPolicyProducts();
+        },
+        error: () => alert('Failed to deactivate product.')
+      });
+    }
   }
 
   // ============== ANALYTICS ==============

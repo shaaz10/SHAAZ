@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: SuggestPolicyDto.cs
 // Layer: EventInsurance.Application
 // Description: Data Transfer Object (DTO) used to transfer data between the presentation layer and application layer for SuggestPolicyDto operations.
@@ -11,5 +11,6 @@ namespace EventInsurance.Application.DTOs
         public int RequestId { get; set; }
         public int PolicyProductId { get; set; }
         public decimal SuggestedPremium { get; set; }
+        public decimal? CustomCoverageAmount { get; set; }
     }
 }

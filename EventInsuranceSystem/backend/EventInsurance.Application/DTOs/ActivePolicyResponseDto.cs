@@ -34,5 +34,11 @@ namespace EventInsurance.Application.DTOs
         public DateTime CreatedAt { get; set; }
 
         public string Message { get; set; } = string.Empty;
+
+        // --- Installment System ---
+        public int TotalInstallments { get; set; }
+        public decimal InstallmentAmount { get; set; }
+        public int InstallmentsPaid { get; set; }
+        public DateTime NextPaymentDueDate { get; set; }
     }
 }

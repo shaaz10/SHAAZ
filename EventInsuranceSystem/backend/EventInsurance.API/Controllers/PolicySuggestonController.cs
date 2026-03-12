@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using EventInsurance.Application.DTOs;
@@ -46,7 +46,8 @@ namespace EventInsurance.API.Controllers
                 agentId,
                 dto.RequestId,
                 dto.PolicyProductId,
-                dto.SuggestedPremium);
+                dto.SuggestedPremium,
+                dto.CustomCoverageAmount);
 
             return Ok(new { message = "Policy suggested successfully" });
         }

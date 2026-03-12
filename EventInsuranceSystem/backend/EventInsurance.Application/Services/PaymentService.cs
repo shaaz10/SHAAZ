@@ -13,24 +13,22 @@ namespace EventInsurance.Application.Services
 {
     /// <summary>
     /// STEP 11 – Customer Makes Payment
-    /// INSERT into Payments table:
-    ///   • PolicyId linked to the active policy
-    ///   • Amount = premium (or custom amount)
-    ///   • PaymentDate = now
-    ///   • Status = 'Completed'
-    ///   • TransactionReference auto-generated (TXN-YYYYMMDD-HHmmss-<PolicyId>)
+    /// Supports monthly installments and pre-payments.
     /// </summary>
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepo;
         private readonly IActivePolicyRepository _activePolicyRepo;
+        private readonly IAgentCommissionRepository _commissionRepo;
 
         public PaymentService(
             IPaymentRepository paymentRepo,
-            IActivePolicyRepository activePolicyRepo)
+            IActivePolicyRepository activePolicyRepo,
+            IAgentCommissionRepository commissionRepo)
         {
             _paymentRepo = paymentRepo;
             _activePolicyRepo = activePolicyRepo;
+            _commissionRepo = commissionRepo;
         }
 
         public async Task<PaymentResponseDto> MakePaymentAsync(MakePaymentRequestDto dto)
@@ -45,16 +43,34 @@ namespace EventInsurance.Application.Services
                 throw new Exception(
                     $"Policy {policy.PolicyNumber} is not Active (Status: {policy.Status}). Payments are only accepted for active policies.");
 
-            // 3. Amount must exactly match the policy premium
-            if (dto.Amount != policy.PremiumAmount)
-                throw new Exception($"Incorrect payment amount. Your premium is {policy.PremiumAmount:C}, but you tried to pay {dto.Amount:C}.");
+            // 3. Rounding and Pre-payment check
+            // We allow payments that are multiples of InstallmentAmount
+            if (policy.InstallmentAmount <= 0)
+            {
+                // Fallback if installments aren't setup: expect full premium once
+                if (dto.Amount != policy.PremiumAmount)
+                    throw new Exception($"Incorrect payment amount. Your premium is {policy.PremiumAmount:C}.");
+            }
+            else
+            {
+                // Verify amount is at least 1 installment
+                if (dto.Amount < policy.InstallmentAmount - 0.01m)
+                    throw new Exception($"Minimum payment amount is one installment ({policy.InstallmentAmount:C}).");
+            }
 
-            // 4. Auto-generate transaction reference if not provided
+            // 4. Calculate how many months this payment covers
+            int monthsToAdvance = 0;
+            if (policy.InstallmentAmount > 0)
+            {
+                monthsToAdvance = (int)Math.Round(dto.Amount / policy.InstallmentAmount);
+            }
+
+            // 5. Auto-generate transaction reference if not provided
             var txnRef = string.IsNullOrWhiteSpace(dto.TransactionReference)
                 ? GenerateTransactionRef(dto.PolicyId)
                 : dto.TransactionReference;
 
-            // 5. Build payment record
+            // 6. Build payment record
             var payment = new Payment
             {
                 PolicyId = dto.PolicyId,
@@ -62,13 +78,46 @@ namespace EventInsurance.Application.Services
                 PaymentDate = DateTime.UtcNow,
                 Status = "Completed",
                 TransactionReference = txnRef,
+                CreatedAt = DateTime.UtcNow,
+                InstallmentNumber = policy.InstallmentsPaid + 1 // Tracks the first month this payment covers
+            };
+
+            // 7. Update Policy State
+            policy.InstallmentsPaid += monthsToAdvance;
+            
+            // Extend the term if paid beyond initial/fixed term
+            if (policy.InstallmentsPaid > policy.TotalInstallments)
+            {
+                policy.TotalInstallments = policy.InstallmentsPaid;
+            }
+
+            // EndDate represents the end of the covered period
+            policy.EndDate = policy.StartDate.AddMonths(policy.InstallmentsPaid);
+            
+            // NextPaymentDueDate is simply the end of the paid period
+            // If they paid for 1 month starting March 11, the next payment is due April 11.
+            policy.NextPaymentDueDate = policy.StartDate.AddMonths(policy.InstallmentsPaid);
+
+            // Update total premium recorded
+            policy.PremiumAmount = policy.InstallmentAmount * policy.TotalInstallments;
+
+            // 8. Generate Agent Commission for this specific payment (10%)
+            var commissionAmount = Math.Round(dto.Amount * 0.10m, 2);
+            var commission = new AgentCommission
+            {
+                AgentId = policy.AgentId,
+                PolicyId = policy.Id,
+                CommissionAmount = commissionAmount,
+                IsPaid = false,
                 CreatedAt = DateTime.UtcNow
             };
 
-            // 6. Save
+            // 9. Save
             await _paymentRepo.AddAsync(payment);
+            await _commissionRepo.AddAsync(commission);
+            await _activePolicyRepo.UpdateAsync(policy);
 
-            // 7. Return response
+            // 9. Return response
             return new PaymentResponseDto
             {
                 Id = payment.Id,
@@ -78,7 +127,7 @@ namespace EventInsurance.Application.Services
                 PaymentDate = payment.PaymentDate,
                 Status = "Completed",
                 TransactionReference = txnRef,
-                Message = $"Payment of {dto.Amount:C} received successfully. Ref: {txnRef}"
+                Message = $"Payment of {dto.Amount:C} received successfully. Advanced coverage by {monthsToAdvance} months. Next due: {policy.NextPaymentDueDate:yyyy-MM-dd}"
             };
         }
 

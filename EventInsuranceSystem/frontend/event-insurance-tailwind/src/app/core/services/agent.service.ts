@@ -18,7 +18,7 @@ export class AgentService {
     }
 
     // Suggest a policy to a customer request
-    suggestPolicy(dto: { requestId: number; policyProductId: number; suggestedPremium: number }) {
+    suggestPolicy(dto: { requestId: number; policyProductId: number; suggestedPremium: number; customCoverageAmount?: number }) {
         return this.http.post<any>(`${this.api}/policysuggestion`, dto);
     }
 

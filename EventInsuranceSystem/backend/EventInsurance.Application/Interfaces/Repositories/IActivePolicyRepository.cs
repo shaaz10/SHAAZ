@@ -16,6 +16,7 @@ namespace EventInsurance.Application.Interfaces.Repositories
         Task<IEnumerable<ActivePolicy>> GetByAgentIdAsync(int agentId);
         Task<IEnumerable<ActivePolicy>> GetAllAsync();
         Task AddAsync(ActivePolicy policy);
+        Task UpdateAsync(ActivePolicy policy);
         Task SaveChangesAsync();
     }
 }

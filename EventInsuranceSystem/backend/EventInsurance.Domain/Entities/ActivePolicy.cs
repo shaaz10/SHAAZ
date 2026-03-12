@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: ActivePolicy.cs
 // Layer: EventInsurance.Domain
 // Description: Domain Entity representing a core business concept and database table structure for ActivePolicy.
@@ -36,5 +36,11 @@ namespace EventInsurance.Domain.Entities
         public PolicyStatus Status { get; set; }
 
         public DateTime? RenewalReminderDate { get; set; }
+
+        // --- Installment System ---
+        public int TotalInstallments { get; set; } = 12; // Default to 12 months/installments
+        public decimal InstallmentAmount { get; set; }
+        public int InstallmentsPaid { get; set; } = 0;
+        public DateTime NextPaymentDueDate { get; set; }
     }
 }

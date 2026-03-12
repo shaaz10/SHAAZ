@@ -159,7 +159,8 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked {
     this.agentSvc.suggestPolicy({
       requestId: req.id,
       policyProductId: req._selectedProduct,
-      suggestedPremium: req._suggestedPremium
+      suggestedPremium: req._suggestedPremium,
+      customCoverageAmount: req._customCoverageAmount
     }).subscribe({
       next: () => {
         req._msg = '✅ Policy suggested successfully!';
@@ -364,7 +365,7 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked {
     const req        = app.insuranceRequest || app;
     const riskScore  = app.riskScore   || 50;
     const eventBudget = req.eventBudget || 100000;
-    const coverageReq = (req.coverageRequested > 0 ? req.coverageRequested : eventBudget * 1.5);
+    const coverageReq = app.coverageAmount || req._customCoverageAmount || app._customCoverageAmount || (req.coverageRequested > 0 ? req.coverageRequested : eventBudget * 1.5);
     const attendees  = req.estimatedAttendees || 200;
     const eventType  = req.eventType || '';
 
@@ -384,14 +385,21 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked {
     const crowdPct   = attendees > 1000 ? 30 : attendees > 500 ? 15 : 0;
     const crowdAddon = Math.round(basePremium * crowdPct / 100);
 
-    const finalPremium = Math.round(basePremium) + riskAddon + eventAddon + crowdAddon;
+    const calculatedPremium = Math.round(basePremium) + riskAddon + eventAddon + crowdAddon;
+
+    // Use stored premiumAmount if available (for bound applications)
+    const finalPremium = app.premiumAmount > 0 ? app.premiumAmount : calculatedPremium;
+    const manualAdjustment = finalPremium - calculatedPremium;
 
     return {
       baseCoverage, basePremium: Math.round(basePremium),
       riskScore, riskPct, riskAddon,
       eventType, eventPct, eventAddon,
       attendees, crowdPct, crowdAddon,
+      calculatedPremium,
       finalPremium,
+      manualAdjustment,
+      isOverride: Math.abs(manualAdjustment) > 1,
       riskLabel: riskScore >= 70 ? 'HIGH RISK' : riskScore >= 40 ? 'MEDIUM RISK' : 'LOW RISK',
       riskColor: riskScore >= 70 ? 'text-red-500' : riskScore >= 40 ? 'text-amber-500' : 'text-emerald-500',
     };

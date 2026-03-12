@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: PolicyApplicationService.cs
 // Layer: EventInsurance.Application
 // Description: Application Service containing the core business logic and orchestration for PolicyApplicationService.
@@ -59,7 +59,7 @@ namespace EventInsurance.Application.Services
                 CustomerId = customerId,
                 AgentId = suggestion.SuggestedByAgentId,
                 PremiumAmount = suggestion.SuggestedPremium,
-                CoverageAmount = suggestion.PolicyProduct?.CoverageAmount ?? 0,
+                CoverageAmount = suggestion.CustomCoverageAmount ?? suggestion.PolicyProduct?.CoverageAmount ?? 0,
                 RiskScore = 0,
                 RiskCategory = "Pending",
                 Status = PolicyApplicationStatus.PendingValidation,

@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: IPolicyRepository.cs
 // Layer: EventInsurance.Application
 // Description: Repository Interface defining data access contracts for IPolicyRepository.
@@ -19,6 +19,8 @@ namespace EventInsurance.Application.Interfaces.Repositories
         Task<PolicyProduct> GetProductByIdAsync(int id);
         Task<IEnumerable<PolicyProduct>> GetAllProductsAsync();
         Task AddProductAsync(PolicyProduct product);
+        Task UpdateProductAsync(PolicyProduct product);
+        Task DeleteProductAsync(int id);
 
         Task<PolicySuggestion> GetSuggestionByIdAsync(int id);
         Task AddSuggestionAsync(PolicySuggestion suggestion);

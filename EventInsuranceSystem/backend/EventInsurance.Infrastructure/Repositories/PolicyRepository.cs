@@ -1,9 +1,3 @@
-// ==========================================
-// File: PolicyRepository.cs
-// Layer: EventInsurance.Infrastructure
-// Description: Infrastructure Repository implementing data access operations using Entity Framework Core for PolicyRepository.
-// This file contributes to the overall system flow by isolating its specific responsibility as part of the N-Tier Architecture.
-// ==========================================
 using Microsoft.EntityFrameworkCore;
 using EventInsurance.Application.Interfaces.Repositories;
 using EventInsurance.Domain.Entities;
@@ -33,6 +27,25 @@ namespace EventInsurance.Infrastructure.Repositories
         public async Task AddProductAsync(PolicyProduct product)
         {
             await _context.PolicyProducts.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateProductAsync(PolicyProduct product)
+        {
+            var existing = await _context.PolicyProducts.FindAsync(product.Id);
+            if (existing == null) return;
+            existing.Name = product.Name;
+            existing.Description = product.Description;
+            existing.BasePremium = product.BasePremium;
+            existing.CoverageAmount = product.CoverageAmount;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteProductAsync(int id)
+        {
+            var existing = await _context.PolicyProducts.FindAsync(id);
+            if (existing == null) return;
+            existing.IsActive = false; // soft-delete — preserves linked suggestions
             await _context.SaveChangesAsync();
         }
 

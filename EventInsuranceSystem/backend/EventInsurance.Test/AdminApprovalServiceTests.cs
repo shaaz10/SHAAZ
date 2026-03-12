@@ -13,16 +13,19 @@ namespace EventInsurance.Test.Services
     {
         private readonly Mock<IPolicyApplicationRepository> _appRepoMock;
         private readonly Mock<INotificationService> _notificationServiceMock;
+        private readonly Mock<IActivePolicyService> _activePolicyServiceMock;
         private readonly AdminApprovalService _adminApprovalService;
 
         public AdminApprovalServiceTests()
         {
             _appRepoMock = new Mock<IPolicyApplicationRepository>();
             _notificationServiceMock = new Mock<INotificationService>();
+            _activePolicyServiceMock = new Mock<IActivePolicyService>();
 
             _adminApprovalService = new AdminApprovalService(
                 _appRepoMock.Object,
-                _notificationServiceMock.Object);
+                _notificationServiceMock.Object,
+                _activePolicyServiceMock.Object);
         }
 
         [Fact]

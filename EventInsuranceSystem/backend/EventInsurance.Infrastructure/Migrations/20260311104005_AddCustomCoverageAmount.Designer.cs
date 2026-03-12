@@ -4,6 +4,7 @@ using EventInsurance.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventInsurance.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311104005_AddCustomCoverageAmount")]
+    partial class AddCustomCoverageAmount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +51,6 @@ namespace EventInsurance.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("InstallmentAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("InstallmentsPaid")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("NextPaymentDueDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PolicyNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -71,9 +65,6 @@ namespace EventInsurance.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalInstallments")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -421,9 +412,6 @@ namespace EventInsurance.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("InstallmentNumber")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
@@ -621,25 +609,25 @@ namespace EventInsurance.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 9, 12, 845, DateTimeKind.Utc).AddTicks(9198),
+                            CreatedAt = new DateTime(2026, 3, 11, 10, 40, 5, 125, DateTimeKind.Utc).AddTicks(4370),
                             RoleName = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 9, 12, 845, DateTimeKind.Utc).AddTicks(9201),
+                            CreatedAt = new DateTime(2026, 3, 11, 10, 40, 5, 125, DateTimeKind.Utc).AddTicks(4373),
                             RoleName = "Customer"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 9, 12, 845, DateTimeKind.Utc).AddTicks(9202),
+                            CreatedAt = new DateTime(2026, 3, 11, 10, 40, 5, 125, DateTimeKind.Utc).AddTicks(4374),
                             RoleName = "Agent"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 9, 12, 845, DateTimeKind.Utc).AddTicks(9202),
+                            CreatedAt = new DateTime(2026, 3, 11, 10, 40, 5, 125, DateTimeKind.Utc).AddTicks(4374),
                             RoleName = "ClaimsOfficer"
                         });
                 });

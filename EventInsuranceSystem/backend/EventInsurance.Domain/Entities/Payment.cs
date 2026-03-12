@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // File: Payment.cs
 // Layer: EventInsurance.Domain
 // Description: Domain Entity representing a core business concept and database table structure for Payment.
@@ -24,5 +24,6 @@ namespace EventInsurance.Domain.Entities
 
         public string Status { get; set; }   // Completed / Failed / Pending
         public string TransactionReference { get; set; }
+        public int? InstallmentNumber { get; set; }
     }
 }
